@@ -14,7 +14,7 @@ export function getMenuAndRouter() {
 
   }
   roleArr.forEach(value => {
-
+    console.log(value)
 
   });
   return [
