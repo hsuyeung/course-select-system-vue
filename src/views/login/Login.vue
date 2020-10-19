@@ -39,7 +39,6 @@
 <script>
   import {login} from "network/login";//引入登录请求的方法
   import {setCookie} from "common/cookie";
-  import {getMenuAndRouter} from "common/utils";
   import router from "../../router"
   //引入cookie相关的方法
 
@@ -94,8 +93,6 @@
               this.$message.success({
                 content: "登录成功",
                 onClose: () => {
-                  console.log(getMenuAndRouter());
-                  router.addRoutes(getMenuAndRouter());
                   this.$router.replace({name: 'Admin'})
                 }
               })

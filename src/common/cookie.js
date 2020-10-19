@@ -4,7 +4,7 @@
  * @param value
  * @param time（cookie的有效时间，默认1小时）
  */
-export function setCookie(key, value, time = 1) {
+export function setCookie(key, value, time = 2) {
   let d = new Date();
   d.setTime(d.getTime() + (time * 60 * 60 * 1000));
   let expires = "expires=" + d.toGMTString();

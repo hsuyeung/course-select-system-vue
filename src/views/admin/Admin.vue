@@ -1,13 +1,18 @@
 <template>
   <a-layout style="height: 100vh;width: 100vw;display: flex">
-
     <!--    侧边导航开始-->
     <a-layout-sider v-model="collapsed" collapsible
                     :style="{ overflow: 'auto', height: '100vh' }">
+      <!--      logo-->
       <div class="logo"/>
-      <a-menu theme="dark" :default-selected-keys="['1']" mode="inline">
+      <!--      菜单-->
+      <a-menu theme="dark" :default-selected-keys="['1']" :selectedKeys="[panes[activeKey].pathName]" mode="inline"
+              @select="handleMenuItemClick">
+        <!--        子菜单-->
         <a-sub-menu :key="sub.key" v-for="sub in menu">
+          <!--          子菜单标题-->
           <span slot="title"><a-icon :type="sub.icon"/><span>{{sub.title}}</span></span>
+          <!--          菜单项-->
           <a-menu-item :key="item.key" v-for="item in sub.childrenMenu">
             {{item.title}}
           </a-menu-item>
@@ -15,16 +20,15 @@
       </a-menu>
     </a-layout-sider>
     <!--    侧边导航结束-->
-
     <a-layout style="height:100vh;flex:1">
 
       <!--      顶部开始-->
-      <a-layout-header style="position: fixed;width: 100%;z-index: 1">
+      <a-layout-header style="">
         <a-menu
           theme="dark"
           mode="horizontal"
           :default-selected-keys="['2']"
-          :style="{ lineHeight: '64px' }"
+          style="line-height: 64px;float: left"
         >
           <a-menu-item key="1">
             nav 1
@@ -36,19 +40,40 @@
             nav 3
           </a-menu-item>
         </a-menu>
+
+        <!--        顶部右侧的用户名及菜单-->
+        <a-dropdown style="float: right">
+          <a class="ant-dropdown-link" style="font-size: 20px">
+            {{username}}
+            <a-icon type="down"/>
+          </a>
+          <a-menu slot="overlay">
+            <a-menu-item key="">
+              修改密码
+            </a-menu-item>
+            <a-menu-item @click="logOut">
+              退出登录
+            </a-menu-item>
+          </a-menu>
+        </a-dropdown>
       </a-layout-header>
       <!--      顶部结束-->
-      <a-layout-content class="content" style="background: white;margin-top: 64px">
+
+      <!--      主要内容区域-->
+      <a-layout-content class="content" style="background: white;">
+
+        <!--        tab切换-->
         <a-tabs v-model="activeKey" hide-add type="editable-card" @edit="onEdit" style="width: 100%;height: 50px"
-                @prevClick="callback"
-                @nextClick="callback" @change="tabChange">
+                @change="tabChange">
           <a-tab-pane v-for="(item,index) in panes" :key="index" :tab="item.title" :closable="item.closable"
                       forceRender>
 
           </a-tab-pane>
         </a-tabs>
+
+        <!--        内容展示-->
         <div class="content-box" style="width: 100%;padding: 5px">
-          <keep-alive :exclude="exclude">
+          <keep-alive>
             <router-view class="content-view"/>
           </keep-alive>
         </div>
@@ -57,48 +82,95 @@
   </a-layout>
 </template>
 <script>
-  import menu from "config/menu";
+  import {getMenu} from "common/utils";//引入获取菜单数据的方法
+  import {checkCookie, getCookie, setCookie} from "common/cookie";//cookie相关方法
 
   export default {
     name: "Admin",
     data() {
       return {
-        collapsed: false,
+        collapsed: false,//侧边导航是否展开
         panes: [
-          {title: "控制台", pathName: "", closable: false},
-          {title: 'Tab 1', pathName: "UserList"},
-          {title: '文章列表', pathName: "ArticleList"},
-          {title: '添加文章', pathName: "AddArticle"},
-        ],
-        activeKey: 0,
-        newTabIndex: 0,
-        exclude: "",
-        menu: [menu.user, menu.article]
+          {title: "控制台", pathName: "Home", closable: false},
+        ],//tab数据
+        activeKey: 0,//当前选中的tab
+        menu: [],//菜单数据
+        username: "",//管理员用户名
       };
     },
     methods: {
-      callback(val) {
-        console.log(val);
+      // 退出登录
+      logOut() {
+        // 弹出提示框
+        this.$confirm({
+          title: '确认退出登录？',
+          okText: '退出',
+          okType: 'danger',
+          centered: true,
+          cancelText: '取消',
+          onOk: () => {
+            // 情况cookie
+            setCookie("token", "", 0);
+            setCookie("username", "", 0);
+            setCookie("role", '', 0);
+            // 跳转到登录页
+            this.$router.replace({name: 'Login'})
+          }
+        })
+
       },
+      //tabs新增或者删除的方法
       onEdit(targetKey, action) {
         this[action](targetKey);
       },
+      //tab切换的方法
       tabChange(key) {
-        console.log(key);
         this.$router.replace({name: this.panes[key].pathName});
       },
+      //tabs删除tab的方法
       remove(targetKey) {
         let activeKey = this.activeKey;
-        this.exclude = this.panes[targetKey].pathName
+        //从数据中删除要关闭的tab
         this.panes.splice(targetKey, 1);
-        if (activeKey == targetKey) {
+        if (activeKey == targetKey) {//判断要关闭的tab是否处于打开状态,设置最后一个为打开状态
           this.activeKey = this.panes.length - 1;
           this.$router.replace({name: this.panes[this.activeKey].pathName});
-
+        } else if (activeKey > targetKey) {//判断要关闭的tab是否在打开tab的左侧
+          this.activeKey = this.activeKey - 1;
         }
       },
+      //左侧菜单点击事件
+      handleMenuItemClick(item, key, keyPath) {
+        // 要插入的tab数据
+        let pane = {title: item.domEvent.target.innerText, pathName: item.key};
+        //判断当前点击的菜单是否有打开的窗口
+        if (!JSON.stringify(this.panes).includes(JSON.stringify(pane))) {
+          //如果没有打开的窗口，就插入到最后，并切换为打开状态
+          this.panes.push(pane);
+          this.activeKey = this.panes.length - 1;
+        } else {
+          //如果有打开的窗口则切换为打开状态
+          this.activeKey = this.panes.findIndex((pane) => {
+            return pane.pathName == item.key;
+          });
+        }
+        //打开路由
+        this.$router.replace({name: item.key});
+      },
     },
+    /**
+     * 生命周期函数
+     */
     created() {
+      //判断token是否存在
+      if (!checkCookie('token')) {
+        this.$router.replace({name: "Login"})
+      } else {
+        this.menu.push(...getMenu())
+        this.$router.replace({name: "Home"});
+        this.username = getCookie('username');
+      }
+
 
     }
   };
