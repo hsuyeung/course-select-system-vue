@@ -43,7 +43,7 @@
 
         <!--        顶部右侧的用户名及菜单-->
         <a-dropdown style="float: right">
-          <a class="ant-dropdown-link" style="font-size: 20px">
+          <a class="ant-dropdown-link" style="font-size: 20px;color:#025BF2;">
             {{username}}
             <a-icon type="down"/>
           </a>
@@ -60,7 +60,7 @@
       <!--      顶部结束-->
 
       <!--      主要内容区域-->
-      <a-layout-content class="content" style="background: white;">
+      <a-layout-content class="content" style="background: white;padding: 5px">
 
         <!--        tab切换-->
         <a-tabs v-model="activeKey" hide-add type="editable-card" @edit="onEdit" style="width: 100%;height: 50px"
@@ -72,9 +72,9 @@
         </a-tabs>
 
         <!--        内容展示-->
-        <div class="content-box" style="width: 100%;padding: 5px">
+        <div class="content-box">
           <keep-alive>
-            <router-view class="content-view"/>
+            <router-view/>
           </keep-alive>
         </div>
       </a-layout-content>
@@ -166,7 +166,7 @@
       if (!checkCookie('token')) {
         this.$router.replace({name: "Login"})
       } else {
-        this.menu.push(...getMenu())
+        this.menu.push(...getMenu());//获取菜单
         this.$router.replace({name: "Home"});
         this.username = getCookie('username');
       }
@@ -178,13 +178,11 @@
 
 <style scoped>
   .content-box {
+    width: 100%;
     height: calc(100% - 50px);
-  }
-
-  .content-view {
-    height: calc(100%);
     overflow: auto;
   }
+
 
   .content >>> .ant-tabs-tabpane {
     display: block;
@@ -196,32 +194,21 @@
     display: none;
   }
 
-  .content-view::-webkit-scrollbar { /*滚动条整体样式*/
-
+  .content-box::-webkit-scrollbar { /*滚动条整体样式*/
     width: 5px; /*高宽分别对应横竖滚动条的尺寸*/
-
     height: 2px;
-
   }
 
-  .content-view::-webkit-scrollbar-thumb { /*滚动条里面小方块*/
-
+  .content-box::-webkit-scrollbar-thumb { /*滚动条里面小方块*/
     border-radius: 10px;
-
     -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-
     background: #001529;
-
   }
 
-  .content-view::-webkit-scrollbar-track { /*滚动条里面轨道*/
-
+  .content-box::-webkit-scrollbar-track { /*滚动条里面轨道*/
     -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-
     border-radius: 10px;
-
     background: #FFFFFF;
-
   }
 
   .logo {
