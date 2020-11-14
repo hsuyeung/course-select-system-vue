@@ -72,7 +72,6 @@
 
           // 调用登录请求的方法
           login(this.name, this.password).then(res => {
-            console.log(res)
             //销毁全局消息提示
             this.$message.destroy();
             // 设置登录按钮为可点击

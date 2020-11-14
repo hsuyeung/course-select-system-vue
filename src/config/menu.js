@@ -80,6 +80,10 @@ export default {
       ADMIN:{
         title:"管理员管理",
         key:"Administrator"
+      },
+      EMAIL:{
+        title:"邮件系统",
+        key:"Email"
       }
     }
   }

@@ -97,9 +97,9 @@
   export default {
     name: "AdminTable",
     props: {
-      "currentPage":{
-        type:Number,
-        default:0
+      "currentPage": {
+        type: Number,
+        default: 0
       },
       "totalPage": {
         type: Number,
@@ -109,15 +109,15 @@
         type: Boolean,
         default: false
       },
-      "data":{
-        type:Array,
-        default:()=>{
+      "data": {
+        type: Array,
+        default: () => {
           return []
         }
       },
-      "roleFilters":{
-        type:Array,
-        default:()=>{
+      "roleFilters": {
+        type: Array,
+        default: () => {
           return []
         }
       }
@@ -127,7 +127,7 @@
         searchText: '',
         searchInput: null,
         searchedColumn: '',
-        filteredInfo:null
+        filteredInfo: null
       }
 
     },
@@ -198,6 +198,7 @@
           {
             title: '权限',
             dataIndex: 'roles',
+            width: "500px",
             scopedSlots: {customRender: 'roles'},
             filters: roleFilters,
             filteredValue: filteredInfo.roles || null,
@@ -232,7 +233,7 @@
           },
           {
             title: "操作",
-            width: "150px",
+            width: "100px",
             align: 'center',
             // fixed: 'right',
             scopedSlots: {customRender: 'action'}
@@ -243,16 +244,16 @@
 
       }
     },
-    methods:{
+    methods: {
       // 操作按钮点击
-      actionClick(index){
-        this.$emit('actionClick',index)
+      actionClick(index) {
+        this.$emit('actionClick', index)
       },
       // 表格发生变化
       handleTableChange(pagination, filters, sorter) {
         this.filteredInfo = filters;
         if (this.currentPage != pagination.current) {//判断页码是否发生变化，是否是在翻页
-          this.$emit('change',pagination.current)
+          this.$emit('change', pagination.current)
         }
       },
       //筛选搜索
@@ -276,4 +277,9 @@
 
 <style scoped>
 
+
+  .highlight {
+    background: #1890FF;
+    color: white;
+  }
 </style>

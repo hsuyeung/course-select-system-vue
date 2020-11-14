@@ -4,22 +4,39 @@
       <a-button type="primary" @click="openAddPanel">添加管理员</a-button>
     </div>
 
-    <admin-table :data="data" :roleFilters="roleFilters" @actionClick="openEditPanel" :current-page="currentPage"
-                 :total-page="total" @change="handleTableChange" :loading="loading"/>
+    <admin-table
+      :data="data"
+      :roleFilters="roleFilters"
+      @actionClick="openEditPanel"
+      :current-page="currentPage"
+      :total-page="total"
+      @change="handleTableChange"
+      :loading="loading"
+    />
 
     <!--    编辑管理员的组件-->
-    <edit-admin :visible="editPanelVisible" @cancel="cancelEdit" :roles="roles" :data="currentData"
-                @success="saveSuccess"/>
+    <edit-admin
+      :visible="editPanelVisible"
+      @cancel="cancelEdit"
+      :roles="roles"
+      :data="currentData"
+      @success="saveSuccess"
+    />
     <!--    添加管理员的组件-->
-    <add-admin :visible="addPanelVisible" @cancel="cancelAdd" :roles="roles" @success="addSuccess"/>
+    <add-admin
+      :visible="addPanelVisible"
+      @cancel="cancelAdd"
+      :roles="roles"
+      @success="addSuccess"
+    />
   </div>
 </template>
 <script>
   import {getAdministratorPage, getAllRoles} from "network/system";//获取API数据和网络请求相关
   import responseCode from "network/responseCode";
-  import EditAdmin from "./components/EditAdmin";
-  import AddAdmin from "./components/AddAdmin";
-  import AdminTable from "./components/AdminTable";
+  import EditAdmin from "./components/EditAdmin";//编辑管理员组件
+  import AddAdmin from "./components/AddAdmin";//添加管理员组件
+  import AdminTable from "./components/AdminTable";//管理员展示表格组件
 
 
   export default {
@@ -130,8 +147,5 @@
 </script>
 
 <style scoped>
-  .highlight {
-    background: #1890FF;
-    color: white;
-  }
+
 </style>

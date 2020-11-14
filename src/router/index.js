@@ -1,7 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import {checkCookie} from "../common/cookie";
-import store from '../store'
+
+//导入子路由
+import systemRouter from "./system";//系统相关
+import userRouter from "./user";//用户相关
+import articleRouter from "./article";//文章相关
 
 Vue.use(VueRouter);
 
@@ -25,35 +29,11 @@ const routes = [
         name: "Home",
         component: () => import("views/admin/home/Home")
       },
-
-    ]
-  },
-  {
-    path: "/admin",
-    name: "Admin",
-    component: () => import("views/admin/Admin"),
-    children: [
-      {
-        path: "/admin/article/add",
-        name: "AddArticle",
-        component: () => import("views/admin/article/Add")
-      },
-      {
-        path: "article/list",
-        name: "ArticleList",
-        component: () => import("views/admin/article/List"),
-
-      },
-      {
-        path: "user/list",
-        name: "UserList",
-        component: () => import("views/admin/user/List"),
-      },
-      {
-        path: "sys/admin",
-        name: "Administrator",
-        component: () => import("views/admin/system/administrator/Administrator")
-      }
+      ...articleRouter
+      ,
+      ...userRouter
+      ,
+      ...systemRouter
     ]
   },
 ]
