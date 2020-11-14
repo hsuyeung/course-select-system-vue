@@ -8,10 +8,10 @@ export default {
     },
     childrenMenu: {
 
-      // ADD: {
-      //   title: "添加用户",
-      //   key: "AddUser"
-      // },
+      ADD: {
+        title: "用户列表",
+        key: "UserList"
+      },
       EDIT: {
         title: "用户列表",
         key: "UserList"
@@ -68,7 +68,21 @@ export default {
         key: "SwiperList"
       }
     }
-
-
+  },
+  SUPER:{
+    main:{
+      title:"系统管理",
+      key:"System",
+      icon:"setting",
+      childrenMenu:[]
+    },
+    childrenMenu:{
+      ADMIN:{
+        title:"管理员管理",
+        key:"Administrator"
+      }
+    }
   }
+
+
 }

@@ -83,7 +83,9 @@
 </template>
 <script>
   import {getMenu} from "common/utils";//引入获取菜单数据的方法
-  import {checkCookie, getCookie, setCookie} from "common/cookie";//cookie相关方法
+  import {checkCookie, getCookie, setCookie} from "common/cookie";
+  import {logout} from "network/login";
+  //cookie相关方法
 
   export default {
     name: "Admin",
@@ -109,12 +111,34 @@
           centered: true,
           cancelText: '取消',
           onOk: () => {
-            // 情况cookie
-            setCookie("token", "", 0);
-            setCookie("username", "", 0);
-            setCookie("role", '', 0);
-            // 跳转到登录页
-            this.$router.replace({name: 'Login'})
+            // 调用退出登录的api
+            logout().then(res => {
+              const {code, msg} = res;
+              if (code === 20002) {//判断code
+                // 清除本地信息
+                setCookie("token", "", 0);
+                setCookie("username", "", 0);
+                setCookie("role", '', 0);
+                //提示信息
+                this.$message.success({
+                  content: msg,
+                  onClose: () => {
+                    //跳转到登录界面
+                    this.$router.replace({name: 'Login'})
+                  }
+                })
+              } else {
+                //错误信息提示
+                this.$message.error({
+                  content: msg
+                })
+              }
+            }).catch(err => {
+              //错误信息提示
+              this.$message.error({
+                content: "请求发送错误"
+              })
+            })
           }
         })
 
@@ -170,8 +194,6 @@
         this.$router.replace({name: "Home"});
         this.username = getCookie('username');
       }
-
-
     }
   };
 </script>

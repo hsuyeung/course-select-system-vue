@@ -77,8 +77,8 @@
             this.$message.destroy();
             // 设置登录按钮为可点击
             this.loginBtnDisabled = false;
-            const {code} = res;
-            if (code == 200) {
+            const {code,msg} = res;
+            if (code == 20001) {
               // 保存token
               setCookie('token', res.token);
 
@@ -97,7 +97,7 @@
                 }
               })
             } else {
-              this.$message.error("登录失败")
+              this.$message.error(msg)
             }
           }).catch(err => {
             // 销毁所有消息提示

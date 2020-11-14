@@ -6,6 +6,10 @@ import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 Vue.config.productionTip = false
 Vue.use(Antd);
+
+import Viser from 'viser-vue';
+Vue.use(Viser);
+
 new Vue({
   router,
   store,

@@ -48,6 +48,11 @@ const routes = [
         path: "user/list",
         name: "UserList",
         component: () => import("views/admin/user/List"),
+      },
+      {
+        path: "sys/admin",
+        name: "Administrator",
+        component: () => import("views/admin/system/administrator/Administrator")
       }
     ]
   },
