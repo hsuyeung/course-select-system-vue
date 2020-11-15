@@ -63,3 +63,16 @@ export function addAdmin(adminInfo) {
 
   })
 }
+
+
+export function sendEmail(formData) {
+  return request({
+    url:"/mail/send",
+    method:"post",
+    headers:{
+      'Content-Type': 'multipart/form-data',
+      'token':getCookie('token')
+    },
+    data:formData
+  })
+}
