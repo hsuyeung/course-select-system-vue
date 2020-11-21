@@ -3,17 +3,18 @@
     <div>
       <a-button type="primary" @click="showEmailPanel">发邮件</a-button>
     </div>
-    <send-email :visible="emailPanelVisible" @cancel="()=>this.emailPanelVisible = false" @success="sendEmailSuccess"/>
-
+<!--    <send-email :visible="emailPanelVisible" @cancel="()=>this.emailPanelVisible = false" @success="sendEmailSuccess"/>-->
+    <send-email2 :visible="emailPanelVisible" @cancel="()=>this.emailPanelVisible = false" @success="sendEmailSuccess"/>
   </div>
 </template>
 
 <script>
   import SendEmail from "./component/SendEmail";
+  import SendEmail2 from "./component/SendEmail2";
 
   export default {
     name: "Email",
-    components: {SendEmail},
+    components: {SendEmail, SendEmail2},
     data() {
       return {
         emailPanelVisible: false,//发送邮件的弹窗是否显示
@@ -25,7 +26,7 @@
         this.emailPanelVisible = true
       },
       // 邮件发送成功
-      sendEmailSuccess(){
+      sendEmailSuccess() {
         this.emailPanelVisible = false;
       }
     }

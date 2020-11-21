@@ -5,19 +5,41 @@
     okText="发送"
     cancelText="取消"
     class="edit-panel"
+    width="70%"
     :confirmLoading="confirmLoading"
     :maskClosable="false"
     ref="collectionForm"
-    @ok="ok"
+    @ok="send"
     @cancel="cancel"
   >
     <a-form-model
-      ref="ruleForm"
+      ref="emailForm"
       :model="form"
       :rules="rules"
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
+      <!--      TODO 对收件人的选择用选择器重写-->
+
+      <a-form-model-item label="收件人" prop="to">
+        <a-tree-select
+          style="width: 100%"
+          :value="roleSelectedItems"
+          :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+          placeholder="请选择收件人"
+          allow-clear
+          multiple
+          class="item"
+          tree-default-expand-all
+          @change="roleSelectChange"
+        >
+          <a-tree-select-node v-for="item in roles" v-show="!roleSelectedItems.includes(item.id)"
+                              :key="item.id+item.roleNameCN" :value="item.id" :title="item.roleNameCN">
+
+          </a-tree-select-node>
+        </a-tree-select>
+
+      </a-form-model-item>
       <a-form-model-item label="收件人" prop="to">
         <a-input
           v-model="form.to"
@@ -33,17 +55,13 @@
       </a-form-model-item>
 
       <a-form-model-item label="内容" prop="text">
-        <a-input
-          v-model="form.text"
-          type="textarea"
-          placeholder="请输入邮件内容"
-        />
+        <editor-md :value="form.text" placeholder="请输入邮件内容" :navigation="false" height="400px" @change="contentChange"/>
       </a-form-model-item>
 
       <a-form-model-item label="抄送" prop="cc">
         <a-input
           v-model="form.cc"
-          placeholder="选填"
+          placeholder="选填，多个抄送用逗号隔开"
         >
           <a-tooltip slot="addonAfter">
             <template slot="title">
@@ -56,7 +74,7 @@
       <a-form-model-item label="密送" prop="bcc">
         <a-input
           v-model="form.bcc"
-          placeholder="选填"
+          placeholder="选填，多个密送用逗号隔开"
         >
           <a-tooltip slot="addonAfter">
             <template slot="title">
@@ -87,21 +105,24 @@
           </p>
         </a-upload-dragger>
       </a-form-model-item>
+      <a-form-model-item label="重置">
+        <a-button @click="resetForm" type="danger">清空邮件内容</a-button>
+      </a-form-model-item>
+
 
     </a-form-model>
   </a-modal>
 </template>
 
 <script>
-  import {sendEmail} from "network/system";
+  import {sendEmail} from "network/system";//发邮件的组件
   import responseCode from "network/responseCode";
+  import EditorMd from "components/EditorMd/EditorMd";
 
-  const formItemLayout = {
-    labelCol: {span: 4},
-    wrapperCol: {span: 20},
-  };
   export default {
-    name: "SendEmail",
+    components: {
+      EditorMd
+    },
     props: {
       "visible": {
         type: Boolean,
@@ -110,10 +131,11 @@
     },
     data() {
       return {
+        roles:[],
+        roleSelectedItems: [],//已经选择的角色信息
         confirmLoading: false,
         labelCol: {span: 3},
-        wrapperCol: {span: 21},
-        other: '',
+        wrapperCol: {span: 20},
         form: {
           to: '',
           subject: "",
@@ -134,23 +156,41 @@
       }
     },
     methods: {
+      //角色选择发生变化
+      roleSelectChange(value) {
+        this.roleSelectedItems = value;
+      },
+      //邮件内容变化
+      contentChange(value, html) {
+        this.form.text = html;
+      },
+      //附件删除
       handleRemove(file) {
         const index = this.form.files.indexOf(file);
         const newFileList = this.form.files.slice();
         newFileList.splice(index, 1);
         this.form.files = newFileList;
       },
+      //阻止默认的上传，将文件保存到data里面
       beforeUpload(file) {
         this.form.files = [...this.form.files, file];
         return false;
       },
-      ok() {
-        this.$refs.ruleForm.validate(valid => {
+      //发送邮件
+      send() {
+        this.$refs.emailForm.validate(valid => {
           if (valid) {
             this.confirmLoading = true;
             let formData = new FormData();
             Object.keys(this.form).forEach(key => {
-              formData.append(key, this.form[key]);
+              if (key === 'files') {
+                this.form[key].forEach(file => {
+                  formData.append('files', file);
+                })
+              } else {
+                formData.append(key, this.form[key]);
+              }
+
             });
             sendEmail(formData).then(res => {
               if (res.code === 20000) {
@@ -172,9 +212,21 @@
         });
       },
       cancel() {
-        this.$refs.ruleForm.resetFields();
+
         this.$emit('cancel')
       },
+      resetForm() {
+        this.$confirm({
+          title: '确认清空邮件内容吗？',
+          content: "确认将清空已输入的全部邮件内容",
+          centered: true,
+          onOk: () => {
+            this.$refs.emailForm.resetFields();
+            this.form.text = ""
+          }
+        });
+
+      }
     }
   }
 </script>

@@ -9,7 +9,7 @@ import {getCookie} from "../common/cookie";
  */
 export function getAdministratorPage(currentPage,pageSize) {
   return request({
-    url:"/admin/page/all",
+    url:"/admin/page",
     headers:{
       "token":getCookie('token'),//传入token
     },
@@ -51,7 +51,11 @@ export function updateAdmin(adminInfo) {
   })
 }
 
-
+/**
+ * 添加管理员
+ * @param adminInfo
+ * @returns {AxiosPromise}
+ */
 export function addAdmin(adminInfo) {
   return request({
     url:"/admin/add",
@@ -64,7 +68,11 @@ export function addAdmin(adminInfo) {
   })
 }
 
-
+/**
+ * 发送邮件
+ * @param formData
+ * @returns {AxiosPromise}
+ */
 export function sendEmail(formData) {
   return request({
     url:"/mail/send",

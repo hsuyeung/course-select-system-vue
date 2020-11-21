@@ -69,7 +69,29 @@ export default {
       }
     }
   },
-  SUPER:{
+  CATEGORY: {//分类
+    main: {
+      title: "分类管理",
+      key: "Category",
+      icon: "unordered-list",
+      childrenMenu: []
+    },
+    childrenMenu: {
+      ADD: {
+        title: "分类列表",
+        key: "CategoryList"
+      },
+      EDIT: {
+        title: "分类列表",
+        key: "CategoryList"
+      },
+      DELETE: {
+        title: "分类列表",
+        key: "CategoryList"
+      }
+    }
+  },
+  SUPER:{//超级管理员才显示的菜单
     main:{
       title:"系统管理",
       key:"System",

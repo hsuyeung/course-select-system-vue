@@ -1,11 +1,11 @@
 <template>
   <div>
     <div style="margin-bottom: 10px">
-      <a-button type="primary" @click="openAddPanel">添加管理员</a-button>
+      <a-button type="primary" @click="openAddPanel">添加分类</a-button>
       <a-button type="primary" style="margin-left: 10px" @click="()=>this.getData()">刷新数据</a-button>
     </div>
 
-    <admin-table
+    <category-table
       :data="data"
       :roleFilters="roleFilters"
       @actionClick="openEditPanel"
@@ -16,32 +16,37 @@
     />
 
     <!--    编辑管理员的组件-->
-    <edit-admin
+    <edit-category
       :visible="editPanelVisible"
       @cancel="cancelEdit"
       :roles="roles"
       :data="currentData"
       @success="saveSuccess"
+      :is-super-admin="isSuperAdmin"
     />
     <!--    添加管理员的组件-->
-    <add-admin
+    <add-category
       :visible="addPanelVisible"
       @cancel="cancelAdd"
       :roles="roles"
       @success="addSuccess"
+      :is-super-admin="isSuperAdmin"
     />
   </div>
 </template>
 <script>
-  import {getAdministratorPage, getAllRoles} from "network/system";//获取API数据和网络请求相关
+
   import responseCode from "network/responseCode";
-  import EditAdmin from "./components/EditAdmin";//编辑管理员组件
-  import AddAdmin from "./components/AddAdmin";//添加管理员组件
-  import AdminTable from "./components/AdminTable";//管理员展示表格组件
+  import EditCategory from "./components/EditCategory";//编辑管理员组件
+  import AddCategory from "./components/AddCategory";//添加管理员组件
+  import CategoryTable from "./components/CategoryTable";
+  import {getCategoryPage} from "network/category";
+  import {getCookie} from "../../../common/cookie";
+  //管理员展示表格组件
 
 
   export default {
-    components: {AdminTable, AddAdmin, EditAdmin},
+    components: {EditCategory, CategoryTable, AddCategory},
     data() {
       return {
         data: [],//管理员数据
@@ -54,7 +59,13 @@
         currentData: {},//当前操作的管理员数据（添加或修改）
         roles: [],//所有角色信息
         addPanelVisible: false,//添加管理员的弹窗是否可见
+        isSuperAdmin:false,//是否是超级管理员
       };
+    },
+    created() {
+      //获取当前用户的角色
+      let roles = getCookie('role');
+      this.isSuperAdmin = roles.includes('SUPER_ADMIN')
     },
     mounted() {
       // 第一次加载获取数据
@@ -107,7 +118,7 @@
       getData() {
         this.loading = true;
         //调用获取分页数据的方法，传入页码和数据条数
-        getAdministratorPage(this.currentPage, this.pageSize).then(res => {
+        getCategoryPage(this.currentPage, this.pageSize).then(res => {
           //判断code
           if (res.code === 20000) {//获取成功
             //设置数据

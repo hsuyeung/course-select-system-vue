@@ -1,49 +1,20 @@
 <template>
-  <a-tree-select
-    show-search
-    style="width: 100%"
-    :value="value"
-    :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-    placeholder="Please select"
-    allow-clear
-    multiple
-    tree-default-expand-all
-    @change="onChange"
-    @search="onSearch"
-    @select="onSelect"
-  >
-    <a-tree-select-node key="0-1" value="parent 1" title="parent 1">
-      <a-tree-select-node key="0-1-1" value="parent 1-0" title="parent 1-0">
-        <a-tree-select-node key="random" value="leaf1" title="my leaf" />
-        <a-tree-select-node key="random1" value="leaf2" title="your leaf" />
-      </a-tree-select-node>
-      <a-tree-select-node key="random2" value="parent 1-1" title="parent 1-1">
-        <a-tree-select-node key="random3" value="sss">
-          <b slot="title" style="color: #08c">sss</b>
-        </a-tree-select-node>
-      </a-tree-select-node>
-    </a-tree-select-node>
-  </a-tree-select>
+  <div>
+    <form action="http://47.103.62.145:8848/api/v3/admin/mail/send" method="post" enctype="multipart/form-data">
+      <input type="email" name="to"/>
+      <input type="text" name="subject"/>
+      <input type="text" name="text"/>
+      <input type="file" name="files[]" multiple/>
+      <input type="submit" value="提交"/>
+    </form>
+  </div>
 </template>
-
 <script>
+
   export default {
     data() {
-      return {
-        value: undefined,
-      };
+      return {};
     },
-    methods: {
-      onChange(value) {
-        console.log(value);
-        this.value = value;
-      },
-      onSearch() {
-        console.log(...arguments);
-      },
-      onSelect() {
-        console.log(...arguments);
-      },
-    },
+    methods: {},
   };
 </script>

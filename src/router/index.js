@@ -6,6 +6,7 @@ import {checkCookie} from "../common/cookie";
 import systemRouter from "./system";//系统相关
 import userRouter from "./user";//用户相关
 import articleRouter from "./article";//文章相关
+import categoryRouter from "./category";//分类
 
 Vue.use(VueRouter);
 
@@ -34,6 +35,8 @@ const routes = [
       ...userRouter
       ,
       ...systemRouter
+      ,
+      ...categoryRouter
     ]
   },
 ]

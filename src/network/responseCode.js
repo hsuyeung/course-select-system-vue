@@ -1,9 +1,39 @@
 export default function responseCode(code, that) {
 
   switch (code) {
-    case 10000:
+    case 10001:
       that.$message.error({
-        content: "信息格式错误",
+        content: "登录失败",
+      });
+      break;
+    case 10002:
+      that.$message.error({
+        content: "注销失败",
+      });
+      break;
+    case 10003:
+      that.$message.error({
+        content: "用户名格式不正确",
+      });
+      break;
+    case 10004:
+      that.$message.error({
+        content: "密码格式不正确",
+      });
+      break;
+    case 10005:
+      that.$message.error({
+        content: "邮箱格式不正确",
+      });
+      break;
+    case 40003:
+      that.$message.error({
+        content: "没有权限",
+      });
+      break;
+    case 40004:
+      that.$message.error({
+        content: "用户不存在",
       });
       break;
     case 50002:
