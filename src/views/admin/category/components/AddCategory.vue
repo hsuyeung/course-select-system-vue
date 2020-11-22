@@ -101,10 +101,12 @@
               } else {
                 responseCode(res.code, this)
               }
+              this.confirmLoading = false;
             }).catch(err => {
               responseCode(-1, this)
+              this.confirmLoading = false;
             });
-            this.confirmLoading = false;
+
           } else {
             return false;
           }
@@ -112,6 +114,7 @@
       },
       //取消添加
       addCancel() {
+        this.confirmLoading = false;
         this.$emit('cancel');
       },
     }

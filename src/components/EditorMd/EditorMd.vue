@@ -6,7 +6,7 @@
       ref="md"
       @change="change"
       :placeholder="placeholder"
-      :style="{height:height}"
+      :style="{height:height,zIndex:500}"
       :navigation="navigation"
     />
   </div>

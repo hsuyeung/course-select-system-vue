@@ -51,7 +51,7 @@ export default function responseCode(code, that) {
       break;
     default:
       that.$message.error({
-        content: "获取数据失败！"
+        content: "操作失败！"
       })
   }
 }
