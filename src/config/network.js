@@ -14,7 +14,7 @@ export const BASE_URL = {
   },
   COMMON: {//公共接口
     MAIN: "/api/v3",
-    UPLOAD: "/api/v3/upload",
+    FILE:"/api/v3/file"
   },
   USER: {//用户相关
     MAIN: "/api/v3/user"
@@ -30,7 +30,7 @@ export const METHOD_URL = {
   LOGOUT: "/logout",
   GET_ALL:"/get/all",
   SEND:"/send",
-  IMG:"/img"
+  ADD_IMG:"/add/img"
 };
 
 

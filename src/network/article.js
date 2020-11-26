@@ -51,7 +51,7 @@ export function getTagPage(currentPage, pageSize) {
  */
 export function uploadImg(formData) {
   return request({
-    url: BASE_URL.COMMON.UPLOAD + METHOD_URL.IMG,
+    url: BASE_URL.COMMON.FILE + METHOD_URL.ADD_IMG,
     method: 'post',
     headers: {
       'Content-Type': 'multipart/form-data',
