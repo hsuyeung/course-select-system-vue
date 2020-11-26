@@ -25,7 +25,15 @@
           v-model="form.description"
         />
       </a-form-model-item>
-
+      <a-form-model-item
+        label="作者"
+        prop="author"
+      >
+        <a-input
+          :maxLength="12"
+          v-model="form.author"
+        />
+      </a-form-model-item>
       <a-form-model-item
         label="封面大图"
         prop="region"
@@ -76,7 +84,7 @@
       >
         <a-select
           mode="multiple"
-          placeholder="Inserted are removed"
+          placeholder="选择标签(选填)"
           :value="selectedTags"
           style="width: 100%"
           @change="tagSelectChange"
@@ -100,6 +108,28 @@
           </a-select-option>
         </a-select>
       </a-form-model-item>
+      <a-form-model-item v-if="isSuperAdmin" label="状态" prop="status">
+        <!--状态-->
+        <a-radio-group
+          :default-value="2"
+          class="item"
+          v-model="form.status"
+          button-style="solid"
+        >
+          <a-radio-button :value="0">
+            正常
+          </a-radio-button>
+          <a-radio-button :value="1">
+            删除
+          </a-radio-button>
+          <a-radio-button :value="2">
+            审核中
+          </a-radio-button>
+          <a-radio-button :value="3">
+            审核失败
+          </a-radio-button>
+        </a-radio-group>
+      </a-form-model-item>
     </a-form-model>
   </a-modal>
 </template>
@@ -120,6 +150,10 @@
     props: {
       //显示弹窗
       "visible": {
+        type: Boolean,
+        default: false
+      },
+      "isSuperAdmin":{
         type: Boolean,
         default: false
       }
@@ -148,14 +182,21 @@
         wrapperCol: {span: 20},//内容的长度占比
         form: {
           description: '',
+          author:"",
           category: null,
+          status:2
         },
         rules: {//输入信息的规则
           description: [
             {required: true, message: '请输入文章描述', trigger: 'blur'},
             {min: 10, max: this.descMaxLength, message: '描述文字长度应该在10~100之间', trigger: 'blur'},
           ],
-          category: [{required: true, message: '请选择分类', trigger: 'change'},]
+          author: [
+            {required: true, message: '请输入作者', trigger: 'blur'},
+            {max: 12, message: '作者名字太长', trigger: 'blur'},
+          ],
+          category: [{required: true, message: '请选择分类', trigger: 'change'},],
+          status: [{required: true, message: '请选择状态', trigger: 'change'},]
         },
         category: [],//分类信息
         currentCategoryPage: 1,//分类信息当前页码
@@ -178,7 +219,6 @@
           this.category = [];
           this.currentTagPage = 1;
           this.tags = [];
-          this.selectedTags = []
         }
       }
     },
@@ -250,7 +290,7 @@
                 }
               }
             }
-            this.$emit('publish',this.form.description,this.cover,this.form.category,tagList);
+            this.$emit('publish',this.form.description,this.cover,this.form.category,tagList,this.form.author,this.form.status);
           } else {
             return false;
           }

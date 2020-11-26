@@ -1,3 +1,4 @@
+
 export const API_URL = "http://47.103.62.145:8848";//API接口的域名
 
 
@@ -5,6 +6,7 @@ export const BASE_URL = {
   ADMIN: {//管理员相关
     MAIN: "/api/v3/admin",//MAIN表示BASE_URL的根url
     TAG: "/api/v3/admin/tag",
+    ARTICLE: "/api/v3/admin/article",
     CATEGORY: "/api/v3/admin/category",
     ADMIN: "/api/v3/admin/admin",
     ROLE: "/api/v3/admin/role",

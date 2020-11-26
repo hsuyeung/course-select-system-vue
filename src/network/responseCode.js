@@ -31,6 +31,11 @@ export default function responseCode(code, that) {
         content: "邮箱格式不正确",
       });
       break;
+    case 20003:
+      that.$message.success({
+        content: "图片上传成功",
+      });
+      break;
     case 40003:
       that.$message.error({
         content: "没有权限",

@@ -60,3 +60,16 @@ export function uploadImg(formData) {
     data: formData
   })
 }
+
+
+export function publishArticle(article) {
+  return request({
+    url:BASE_URL.ADMIN.ARTICLE+METHOD_URL.ADD,
+    method: "post",
+    headers:{
+      "token":getCookie('token'),
+    },
+    data: article
+
+  })
+}

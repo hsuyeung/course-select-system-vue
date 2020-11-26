@@ -1,20 +1,22 @@
 <template>
   <div class="name">
     <div style="height: 50px;width: 100%">
-      <a-input style="width: 800px;" placeholder="请输入标题" size="large"/>
+      <a-input v-model="title" style="width: 800px;" placeholder="请输入标题" size="large"/>
       <a-button size="large" style="margin-left: 10px" type="primary" @click="()=>this.publishPanelVisible=true">发布
       </a-button>
     </div>
 
-    <editor-md class="editor" @change="contentChange"/>
-    <publish-modal :visible="publishPanelVisible" @cancel="cancelPublish" @publish="articlePublish"/>
+    <editor-md ref="editor" class="editor" @change="contentChange"/>
+    <publish-modal :visible="publishPanelVisible" :is-super-admin="isSuperAdmin" @cancel="cancelPublish"
+                   @publish="articlePublish"/>
   </div>
 </template>
 
 <script>
   import EditorMd from "./components/EditorMd";
   import PublishModal from "./components/PublishModal";
-  import {uploadImg} from "../../../network/article";
+  import {publishArticle, uploadImg} from "../../../network/article";
+  import {getCookie} from "../../../common/cookie";
 
   export default {
     name: "Add",
@@ -24,11 +26,18 @@
     },
     data() {
       return {
+        title: "",//标题
         md: "",//md内容
         html: "",//html内容
         imgFile: {},//图片文件
         publishPanelVisible: false,//发布面板是否显示
+        isSuperAdmin: false,//是否是超级管理员
       }
+    },
+    created() {
+      //获取当前用户的角色
+      let roles = getCookie('role');
+      this.isSuperAdmin = roles.includes('SUPER_ADMIN')
     },
     methods: {
       //编辑器内容发生变化
@@ -40,54 +49,78 @@
       //发布文章的弹窗取消事件
       cancelPublish() {
         this.publishPanelVisible = false;
+
       },
-      articlePublish(description, cover, category, tagList) {
+      articlePublish(description, cover, category, tagList, author, status) {
+        if (this.title === "") return;
+        let article = {};
+
+        this.$message.loading({
+          content: "正在发布文章",
+          duration: 0
+        })
         // 1、上传封面图获取图片链接
         let coverFormData = new FormData();
         coverFormData.append('file', cover);
-        uploadImg(coverFormData).then(res=>{
-          // TODO 替换封面图链接
-          console.log(1,res)
 
+        uploadImg(coverFormData).then(res => {
+          if (res.code && res.code === 20003) {
+            article["cover"] = res.data;
+            // 2、循环上传文章的图片文件，判断文章中是否存在这个标记，存在的才上传
+            //2.1定义图片上传的Promise的数组
+            let PromiseArr = [];
+            //循环上传将Promise对象存到数组中
+            Object.keys(this.imgFile).filter(key => {
+              let reg_str = "/(!\\[\[^\\[\]*?\\]\(?=\\(\)\)\\(\\s*\(" + key + "\)\\s*\\)/g";
+              let reg = eval(reg_str);
+              if (reg.test(this.md)) {
+                let imgFormData = new FormData();
+                imgFormData.append('file', this.imgFile[key]);
+                PromiseArr.push(uploadImg(imgFormData));
+              } else {
+                delete this.imgFile[key]
+              }
+            });
 
-          // 2、循环上传文章的图片文件，判断文章中是否存在这个标记，存在的才上传
-          //2.1定义图片上传的Promise的数组
-          let PromiseArr = [];
-          //循环上传将Promise对象存到数组中
-          Object.keys(this.imgFile).filter(key => {
-            let reg_str = "/(!\\[\[^\\[\]*?\\]\(?=\\(\)\)\\(\\s*\(" + key + "\)\\s*\\)/g";
-            let reg = eval(reg_str);
-            if (reg.test(this.md)) {
-              let imgFormData = new FormData();
-              imgFormData.append('file', this.imgFile[key]);
-              PromiseArr.push(uploadImg(imgFormData));
-            }
-          });
+            //将Promise上传全部完成之后的结果返回给下一级
+            return Promise.all(PromiseArr)
+          } else {
+            return Promise.reject("封面图上传失败")
+          }
+        }).then(res => {
 
-          //将Promise上传全部完成之后的结果返回给下一级
-          return Promise.all(PromiseArr)
-        }).then(res=>{
-          console.log(3,res);
-        }).catch(err=>{
-          console.log(err);
+          // 3、获取到链接之后，循环替换文章里面的对应标记为图片链接
+          Object.keys(this.imgFile).map((key, index) => {
+            this.$refs.editor.$refs.md.$img2Url(key, res[index].data)
+          })
+
+          // 4、组装文章对象，将标题、描述、封面图、分类、标签、内容组装为一个对象
+          const {title, md, html} = this;
+          article["title"] = title;
+          article["author"] = author;
+          article["mdContent"] = md;
+          article["htmlContent"] = html;
+          article["description"] = description;
+          article["category"] = JSON.parse(category);
+          article["tags"] = tagList;
+          article["status"] = status;
+          // 5、发布文章
+          return publishArticle(article)
+        }).then(res => {
+          if (res.code && res.code === 20000) {
+            this.publishPanelVisible = false;
+            this.$message.destroy();
+            this.$message.success({
+              content:"发布成功"
+            })
+          }else {
+            return Promise.reject("文章发布失败")
+          }
+        }).catch(err => {
+          this.$message.error({
+            content: err
+          })
         })
-
-
-
-
-        // Promise.all(
-        //
-        // ).then(res=>{
-        //   console.log(res)
-        // }).catch(err=>{
-        //   console.log(err)
-        // });
-
-
-        // 3、获取到链接之后，循环替换文章里面的对应标记为图片链接
-        // 4、组装文章对象，将标题、描述、封面图、分类、标签、内容组装为一个对象
-        // 5、发布文章
-
       }
     }
   }
