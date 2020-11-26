@@ -1,5 +1,6 @@
 import {request} from "./request";
-import {getCookie} from "../common/cookie";
+import {getCookie} from "common/cookie";
+import {BASE_URL, METHOD_URL} from "config/network";
 
 /**
  * 添加分类
@@ -8,10 +9,10 @@ import {getCookie} from "../common/cookie";
  */
 export function addCategory(data) {
   return request({
-    url:"/category/add",
-    method:'post',
-    headers:{
-      "token":getCookie('token')
+    url: BASE_URL.ADMIN.CATEGORY + METHOD_URL.ADD,
+    method: 'post',
+    headers: {
+      "token": getCookie('token')
     },
     data
   })
@@ -23,15 +24,15 @@ export function addCategory(data) {
  * @param pageSize
  * @returns {AxiosPromise}
  */
-export function getCategoryPage(currentPage,pageSize) {
+export function getCategoryPage(currentPage, pageSize) {
   return request({
-    url:"/category/get/page",
-    headers:{
-      "token":getCookie('token'),//传入token
+    url: BASE_URL.ADMIN.CATEGORY + METHOD_URL.GET_PAGE,
+    headers: {
+      "token": getCookie('token'),//传入token
     },
-    params:{
-      pageIndex:currentPage,//页码
-      pageSize:pageSize,//每页的数据条数
+    params: {
+      pageIndex: currentPage,//页码
+      pageSize: pageSize,//每页的数据条数
     }
   })
 }
@@ -43,10 +44,10 @@ export function getCategoryPage(currentPage,pageSize) {
  */
 export function updateCategory(data) {
   return request({
-    url:"/category/update",
-    method:'post',
-    headers:{
-      "token":getCookie('token')
+    url: BASE_URL.ADMIN.CATEGORY + METHOD_URL.UPDATE,
+    method: 'post',
+    headers: {
+      "token": getCookie('token')
     },
     data
   })

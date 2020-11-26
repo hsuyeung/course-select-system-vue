@@ -1,5 +1,7 @@
 import {request} from "./request";
 import {getCookie} from "common/cookie";
+import {BASE_URL, METHOD_URL} from "config/network";
+
 
 /**
  * 登录
@@ -7,7 +9,7 @@ import {getCookie} from "common/cookie";
  */
 export function login(name, password) {
   return request({
-    url: "/login",
+    url: BASE_URL.ADMIN.MAIN + METHOD_URL.LOGIN,
     method: "post",
     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
     transformRequest: [function (data, headers) {
@@ -30,10 +32,10 @@ export function login(name, password) {
  */
 export function logout() {
   return request({
-    url: "/logout",
+    url: BASE_URL.ADMIN.MAIN + METHOD_URL.LOGOUT,
     method: "post",
     headers: {
-      "token":getCookie('token')
+      "token": getCookie('token')
     }
   })
 }

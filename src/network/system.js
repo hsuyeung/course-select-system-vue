@@ -1,5 +1,6 @@
 import {request} from "./request";
-import {getCookie} from "../common/cookie";
+import {getCookie} from "common/cookie";
+import {BASE_URL, METHOD_URL} from "config/network";
 
 /**
  * 分页获取管理员信息
@@ -7,15 +8,15 @@ import {getCookie} from "../common/cookie";
  * @param pageSize
  * @returns {AxiosPromise}
  */
-export function getAdministratorPage(currentPage,pageSize) {
+export function getAdministratorPage(currentPage, pageSize) {
   return request({
-    url:"/admin/get/page",
-    headers:{
-      "token":getCookie('token'),//传入token
+    url: BASE_URL.ADMIN.ADMIN + METHOD_URL.GET_PAGE,
+    headers: {
+      "token": getCookie('token'),//传入token
     },
-    params:{
-      pageIndex:currentPage,//页码
-      pageSize:pageSize,//每页的数据条数
+    params: {
+      pageIndex: currentPage,//页码
+      pageSize: pageSize,//每页的数据条数
     }
   })
 }
@@ -26,9 +27,9 @@ export function getAdministratorPage(currentPage,pageSize) {
  */
 export function getAllRoles() {
   return request({
-    url: '/role/get/all',
-    headers:{
-      "token":getCookie('token'),//传入token
+    url: BASE_URL.ADMIN.ROLE + METHOD_URL.GET_ALL,
+    headers: {
+      "token": getCookie('token'),//传入token
     },
   })
 }
@@ -42,12 +43,12 @@ export function getAllRoles() {
  */
 export function updateAdmin(adminInfo) {
   return request({
-    url:"/admin/update",
-    method:'post',
-    headers:{
-      "token":getCookie('token')
+    url: BASE_URL.ADMIN.ADMIN + METHOD_URL.UPDATE,
+    method: 'post',
+    headers: {
+      "token": getCookie('token')
     },
-    data:adminInfo
+    data: adminInfo
   })
 }
 
@@ -58,10 +59,10 @@ export function updateAdmin(adminInfo) {
  */
 export function addAdmin(adminInfo) {
   return request({
-    url:"/admin/add",
-    method:"post",
-    headers:{
-      "token":getCookie('token')
+    url: BASE_URL.ADMIN.ADMIN + METHOD_URL.ADD,
+    method: "post",
+    headers: {
+      "token": getCookie('token')
     },
     data: adminInfo
 
@@ -75,12 +76,12 @@ export function addAdmin(adminInfo) {
  */
 export function sendEmail(formData) {
   return request({
-    url:"/mail/send",
-    method:"post",
-    headers:{
+    url: BASE_URL.ADMIN.MAIL + METHOD_URL.SEND,
+    method: "post",
+    headers: {
       'Content-Type': 'multipart/form-data',
-      'token':getCookie('token')
+      'token': getCookie('token')
     },
-    data:formData
+    data: formData
   })
 }

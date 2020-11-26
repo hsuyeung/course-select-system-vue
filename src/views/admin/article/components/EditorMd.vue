@@ -61,11 +61,12 @@
         // render 为 markdown 解析后的结果[html]
         this.html = render;
         //发出change事件，参数为markdown和html
-        this.$emit('change', value, this.html);
+        this.$emit('change', value, this.html,this.img_file);
       },
       //添加图片
       imgAdd(position,file){
         this.img_file[position] = file;
+        // this.$refs.md.$img2Url(position,"http://baidu.com")
       },
       //删除图片
       deleteImg(file){

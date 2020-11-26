@@ -51,15 +51,15 @@
         label="分类"
         prop="category"
       >
-        <a-select v-model="form.category" default-value="请选择分类"  style="width: 200px" >
+        <a-select v-model="form.category" default-value="请选择分类" style="width: 200px">
           <div slot="dropdownRender" slot-scope="menu">
             <v-nodes :vnodes="menu"/>
             <a-divider style="margin: 4px 0;"/>
             <div
-              v-if="currentPage<=totalPage"
+              v-if="currentCategoryPage<=categoryTotalPage"
               style="padding: 4px 8px; cursor: pointer;text-align: center"
               @mousedown="e => e.preventDefault()"
-              @click="loadMore"
+              @click="loadMoreCategory"
             >
               点击加载更多分类
             </div>
@@ -70,13 +70,43 @@
           </a-select-option>
         </a-select>
       </a-form-model-item>
+      <a-form-model-item
+        label="标签"
+        prop="tag"
+      >
+        <a-select
+          mode="multiple"
+          placeholder="Inserted are removed"
+          :value="selectedTags"
+          style="width: 100%"
+          @change="tagSelectChange"
+        >
+          <div slot="dropdownRender" slot-scope="menu">
+            <v-nodes :vnodes="menu"/>
+            <a-divider style="margin: 4px 0;"/>
+            <div
+              v-if="currentTagPage<=tagTotalPage"
+              style="padding: 4px 8px; cursor: pointer;text-align: center"
+              @mousedown="e => e.preventDefault()"
+              @click="loadMoreTag"
+            >
+              点击加载更多标签
+            </div>
+            <div v-else style="padding: 4px 8px;text-align: center">没有更多了</div>
+
+          </div>
+          <a-select-option v-for="item in tagOptions" :key="item.id" :value="item.tagName">
+            {{ item.tagName }}
+          </a-select-option>
+        </a-select>
+      </a-form-model-item>
     </a-form-model>
   </a-modal>
 </template>
 
 <script>
   //获取图片的base64数据
-  import {getCategoryPage} from "network/article";
+  import {getCategoryPage, getTagPage} from "network/article";
   import responseCode from "network/responseCode";
 
   function getBase64(img, callback) {
@@ -100,6 +130,12 @@
         render: (h, ctx) => ctx.props.vnodes,
       },
     },
+    computed: {
+      tagOptions() {
+        return this.tags.filter(item =>!this.selectedTags.includes(item.tagName)
+        );
+      },
+    },
     data() {
       return {
         items: ['jack', 'lucy'],
@@ -112,7 +148,7 @@
         wrapperCol: {span: 20},//内容的长度占比
         form: {
           description: '',
-          category:null,
+          category: null,
         },
         rules: {//输入信息的规则
           description: [
@@ -122,28 +158,44 @@
           category: [{required: true, message: '请选择分类', trigger: 'change'},]
         },
         category: [],//分类信息
-        currentPage: 1,//分类信息当前页码
-        pageSize: 10,//分类信息每页数据条数
-        totalPage: 0,//分类信息总页数
+        currentCategoryPage: 1,//分类信息当前页码
+        categoryPageSize: 10,//分类信息每页数据条数
+        categoryTotalPage: 0,//分类信息总页数
+        selectedTags: [],//已选中的标签
+        tags: [],//所有标签
+        currentTagPage: 1,//标签信息当前页码
+        tagPageSize: 10,//标签信息每页数据条数
+        tagTotalPage: 0,//标签信息总页数
       }
     },
     watch: {
       visible(value) {
         if (value) {
-          this.getCategoryData()
-        }else {
-          this.currentPage = 1;
+          this.getCategoryData();
+          this.getTagData();
+        } else {
+          this.currentCategoryPage = 1;
           this.category = [];
+          this.currentTagPage = 1;
+          this.tags = [];
+          this.selectedTags = []
         }
       }
     },
     methods: {
-      getCategoryData() {
-        getCategoryPage(this.currentPage, this.pageSize).then(res => {
+      //标签选择变化
+      tagSelectChange(value) {
+        this.selectedTags = value;
+      },
+      loadMoreTag(){
+        this.getTagData();
+      },
+      getTagData() {
+        getTagPage(this.currentTagPage, this.tagPageSize).then(res => {
           if (res.code === 20000) {
-            this.category = [...this.category, ...res.data.data];
-            this.totalPage = res.data.totalPage;
-            this.currentPage++;
+            this.tags = [...this.tags, ...res.data.data];
+            this.tagTotalPage = res.data.totalPage;
+            this.currentTagPage++;
           } else {
             responseCode(res.code, this)
           }
@@ -151,14 +203,31 @@
           responseCode(-1, this);
         })
       },
-      loadMore() {
+      //分页获取分类数据
+      getCategoryData() {
+        getCategoryPage(this.currentCategoryPage, this.categoryPageSize).then(res => {
+          if (res.code === 20000) {
+            this.category = [...this.category, ...res.data.data];
+            this.categoryTotalPage = res.data.categoryTotalPage;
+            this.currentCategoryPage++;
+          } else {
+            responseCode(res.code, this)
+          }
+        }).catch(err => {
+          responseCode(-1, this);
+        })
+      },
+      //加载更多
+      loadMoreCategory() {
         this.getCategoryData();
       },
+      //删除封面图
       deleteCover() {
         this.cover = null;
         this.imageUrl = ""
         this.delCoverBtnVisible = false
       },
+      //封面图发送变化
       uploadChange(info) {
         getBase64(info.fileList[0].originFileObj, imageUrl => {
           this.imageUrl = imageUrl;
@@ -172,9 +241,17 @@
       publish() {
         this.$refs.form.validate(valid => {
           if (valid) {
-            alert('submit!');
+
+            const {selectedTags,tags} = this,tagList=[];
+            for (let i in selectedTags){
+              for (let j in tags){
+                if (selectedTags[i]===tags[j].tagName){
+                  tagList.push(tags[j])
+                }
+              }
+            }
+            this.$emit('publish',this.form.description,this.cover,this.form.category,tagList);
           } else {
-            console.log('error submit!!');
             return false;
           }
         });
