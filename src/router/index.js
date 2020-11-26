@@ -7,6 +7,7 @@ import systemRouter from "./system";//系统相关
 import userRouter from "./user";//用户相关
 import articleRouter from "./article";//文章相关
 import categoryRouter from "./category";//分类
+import tagRouter from './tag'//标签
 
 Vue.use(VueRouter);
 
@@ -37,9 +38,11 @@ const routes = [
       ...systemRouter
       ,
       ...categoryRouter
+      ,
+      ...tagRouter
     ]
   },
-]
+];
 
 const router = new VueRouter({
   routes

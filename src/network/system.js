@@ -9,7 +9,7 @@ import {getCookie} from "../common/cookie";
  */
 export function getAdministratorPage(currentPage,pageSize) {
   return request({
-    url:"/admin/page",
+    url:"/admin/get/page",
     headers:{
       "token":getCookie('token'),//传入token
     },
@@ -26,7 +26,7 @@ export function getAdministratorPage(currentPage,pageSize) {
  */
 export function getAllRoles() {
   return request({
-    url: '/role/all',
+    url: '/role/get/all',
     headers:{
       "token":getCookie('token'),//传入token
     },

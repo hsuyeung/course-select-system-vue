@@ -10,7 +10,7 @@ import {getCookie} from "common/cookie";
  */
 export function getCategoryPage(currentPage,pageSize) {
   return request({
-    url:"/category/page",
+    url:"/category/get/page",
     headers:{
       "token":getCookie('token'),//传入token
     },

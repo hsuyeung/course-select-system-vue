@@ -160,7 +160,6 @@
         this.delCoverBtnVisible = false
       },
       uploadChange(info) {
-        console.log(info);
         getBase64(info.fileList[0].originFileObj, imageUrl => {
           this.imageUrl = imageUrl;
         });

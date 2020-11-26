@@ -2,13 +2,13 @@ import {request} from "./request";
 import {getCookie} from "../common/cookie";
 
 /**
- * 添加分类
+ * 添加标签
  * @param data
  * @returns {AxiosPromise}
  */
-export function addCategory(data) {
+export function addTag(data) {
   return request({
-    url:"/category/add",
+    url:"/tag/add",
     method:'post',
     headers:{
       "token":getCookie('token')
@@ -23,9 +23,9 @@ export function addCategory(data) {
  * @param pageSize
  * @returns {AxiosPromise}
  */
-export function getCategoryPage(currentPage,pageSize) {
+export function getTagPage(currentPage,pageSize) {
   return request({
-    url:"/category/get/page",
+    url:"/tag/get/page",
     headers:{
       "token":getCookie('token'),//传入token
     },
@@ -41,9 +41,9 @@ export function getCategoryPage(currentPage,pageSize) {
  * @param data
  * @returns {AxiosPromise}
  */
-export function updateCategory(data) {
+export function updateTag(data) {
   return request({
-    url:"/category/update",
+    url:"/tag/update",
     method:'post',
     headers:{
       "token":getCookie('token')

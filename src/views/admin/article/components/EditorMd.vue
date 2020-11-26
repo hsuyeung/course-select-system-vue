@@ -44,6 +44,7 @@
       return {
         content: '', // 输入的markdown
         html: '',    // 及时转的html
+        img_file: {},//图片文件
       }
     },
     watch:{
@@ -64,13 +65,11 @@
       },
       //添加图片
       imgAdd(position,file){
-        console.log(position)
-        console.log(file)
-        // this.$refs.md.$img2Url(position,'http://baidu.com')
+        this.img_file[position] = file;
       },
       //删除图片
-      deleteImg(fileName){
-        console.log(fileName)
+      deleteImg(file){
+        delete this.img_file[file[0]];
       }
     }
   }

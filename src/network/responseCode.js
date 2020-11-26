@@ -1,6 +1,11 @@
 export default function responseCode(code, that) {
 
   switch (code) {
+    case 10000:
+      that.$message.error({
+        content: "操作失败",
+      });
+      break;
     case 10001:
       that.$message.error({
         content: "登录失败",
@@ -42,6 +47,26 @@ export default function responseCode(code, that) {
         onClose: () => {
           that.$router.replace({name: "Login"})
         }
+      });
+      break;
+    case 60001:
+      // that.$message.warning({
+      //   content: "没有更多数据了",
+      // });
+      break;
+    case 60002:
+      that.$message.error({
+        content: "分类名已存在",
+      });
+      break;
+    case 60003:
+      that.$message.error({
+        content: "标签名已存在",
+      });
+      break;
+    case 60004:
+      that.$message.error({
+        content: "管理员名字已存在",
       });
       break;
     case -1:

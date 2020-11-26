@@ -12,7 +12,7 @@
 </template>
 
 <script>
-  import EditorMd from "components/EditorMd/EditorMd";
+  import EditorMd from "./components/EditorMd";
   import PublishModal from "./components/PublishModal";
   export default {
     name: "Add",

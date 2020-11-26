@@ -91,6 +91,28 @@ export default {
       }
     }
   },
+  TAG: {//标签
+    main: {
+      title: "标签管理",
+      key: "Tag",
+      icon: "unordered-list",
+      childrenMenu: []
+    },
+    childrenMenu: {
+      ADD: {
+        title: "标签列表",
+        key: "TagList"
+      },
+      EDIT: {
+        title: "标签列表",
+        key: "TagList"
+      },
+      DELETE: {
+        title: "标签列表",
+        key: "TagList"
+      }
+    }
+  },
   SUPER:{//超级管理员才显示的菜单
     main:{
       title:"系统管理",
