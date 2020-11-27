@@ -62,6 +62,11 @@ export function uploadImg(formData) {
 }
 
 
+/**
+ * 发布文章
+ * @param article
+ * @returns {AxiosPromise}
+ */
 export function publishArticle(article) {
   return request({
     url:BASE_URL.ADMIN.ARTICLE+METHOD_URL.ADD,
@@ -71,5 +76,25 @@ export function publishArticle(article) {
     },
     data: article
 
+  })
+}
+
+
+/**
+ * 分页获取文章数据
+ * @param currentPage
+ * @param pageSize
+ * @returns {AxiosPromise}
+ */
+export function getArticlePage(currentPage, pageSize) {
+  return request({
+    url: BASE_URL.ADMIN.ARTICLE + METHOD_URL.GET_PAGE,
+    headers: {
+      "token": getCookie('token'),//传入token
+    },
+    params: {
+      pageIndex: currentPage,//页码
+      pageSize: pageSize,//每页的数据条数
+    }
   })
 }

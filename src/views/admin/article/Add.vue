@@ -52,7 +52,12 @@
 
       },
       articlePublish(description, cover, category, tagList, author, status) {
-        if (this.title === "") return;
+        if (this.title === "") {
+          this.$message.warning({
+            content: "请输入标题"
+          });
+          return;
+        }
         let article = {};
 
         this.$message.loading({
@@ -111,9 +116,9 @@
             this.publishPanelVisible = false;
             this.$message.destroy();
             this.$message.success({
-              content:"发布成功"
+              content: "发布成功"
             })
-          }else {
+          } else {
             return Promise.reject("文章发布失败")
           }
         }).catch(err => {
