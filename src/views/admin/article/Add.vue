@@ -1,14 +1,34 @@
 <template>
   <div class="name">
     <div style="height: 50px;width: 100%">
-      <a-input v-model="title" style="width: 800px;" placeholder="请输入标题" size="large"/>
-      <a-button size="large" style="margin-left: 10px" type="primary" @click="()=>this.publishPanelVisible=true">发布
+      <a-input
+        v-model="title"
+        style="width: 800px;"
+        placeholder="请输入标题"
+        size="large"
+      />
+      <a-button
+        size="large"
+        style="margin-left: 10px"
+        type="primary"
+        @click="()=>this.publishPanelVisible=true"
+      >
+        发布
       </a-button>
     </div>
 
-    <editor-md ref="editor" class="editor" @change="contentChange"/>
-    <publish-modal :visible="publishPanelVisible" :is-super-admin="isSuperAdmin" @cancel="cancelPublish"
-                   @publish="articlePublish"/>
+    <editor-md
+      ref="editor"
+      class="editor"
+      @change="contentChange"
+    />
+    <publish-modal
+      ref="publish"
+      :visible="publishPanelVisible"
+      :is-super-admin="isSuperAdmin"
+      @cancel="cancelPublish"
+      @publish="articlePublish"
+    />
   </div>
 </template>
 
@@ -63,41 +83,52 @@
         this.$message.loading({
           content: "正在发布文章",
           duration: 0
-        })
-        // 1、上传封面图获取图片链接
-        let coverFormData = new FormData();
-        coverFormData.append('file', cover);
+        });
 
-        uploadImg(coverFormData).then(res => {
-          if (res.code && res.code === 20003) {
-            article["cover"] = res.data;
-            // 2、循环上传文章的图片文件，判断文章中是否存在这个标记，存在的才上传
-            //2.1定义图片上传的Promise的数组
-            let PromiseArr = [];
-            //循环上传将Promise对象存到数组中
-            Object.keys(this.imgFile).filter(key => {
-              let reg_str = "/(!\\[\[^\\[\]*?\\]\(?=\\(\)\)\\(\\s*\(" + key + "\)\\s*\\)/g";
-              let reg = eval(reg_str);
-              if (reg.test(this.md)) {
-                let imgFormData = new FormData();
-                imgFormData.append('file', this.imgFile[key]);
-                PromiseArr.push(uploadImg(imgFormData));
+        new Promise((resolve, reject) => {
+          if (cover != null) {
+            // 1、上传封面图获取图片链接
+            let coverFormData = new FormData();
+            coverFormData.append('file', cover);
+            uploadImg(coverFormData).then(res => {
+              if (res.code && res.code === 20003) {
+                article["cover"] = res.data;
+                resolve();
               } else {
-                delete this.imgFile[key]
+                reject(res.msg);
               }
-            });
-
-            //将Promise上传全部完成之后的结果返回给下一级
-            return Promise.all(PromiseArr)
+            }).catch(err => {
+              reject(err);
+            })
           } else {
-            return Promise.reject("封面图上传失败")
+            resolve();
           }
+        }).then(res => {
+          // 2、循环上传文章的图片文件，判断文章中是否存在这个标记，存在的才上传
+          //2.1定义图片上传的Promise的数组
+          let PromiseArr = [];
+          //循环上传将Promise对象存到数组中
+          Object.keys(this.imgFile).filter(key => {
+            let reg_str = "/(!\\[\[^\\[\]*?\\]\(?=\\(\)\)\\(\\s*\(" + key + "\)\\s*\\)/g";
+            let reg = eval(reg_str);
+            if (reg.test(this.md)) {
+              let imgFormData = new FormData();
+              imgFormData.append('file', this.imgFile[key]);
+              PromiseArr.push(uploadImg(imgFormData));
+            } else {
+              delete this.imgFile[key]
+            }
+          });
+
+          //将Promise上传全部完成之后的结果返回给下一级
+          return Promise.all(PromiseArr)
+
         }).then(res => {
 
           // 3、获取到链接之后，循环替换文章里面的对应标记为图片链接
           Object.keys(this.imgFile).map((key, index) => {
             this.$refs.editor.$refs.md.$img2Url(key, res[index].data)
-          })
+          });
 
           // 4、组装文章对象，将标题、描述、封面图、分类、标签、内容组装为一个对象
           const {title, md, html} = this;
@@ -112,14 +143,26 @@
           // 5、发布文章
           return publishArticle(article)
         }).then(res => {
+          this.$message.destroy();
           if (res.code && res.code === 20000) {
             this.publishPanelVisible = false;
-            this.$message.destroy();
+
             this.$message.success({
               content: "发布成功"
-            })
+            });
+
+            this.$refs.editor._data.content = "";//清空内容
+            this.title = "";//清空标题
+            this.$refs.publish._data.form = {//清空发布弹窗组件中的描述、作者、分类等信息
+              description: '',
+              author: "",
+              category: null,
+              status: 2
+            }
+            this.$refs.publish._data.cover = null;//清空标题图
+            this.$refs.publish._data.selectedTags = [];//清空已选标签
           } else {
-            return Promise.reject("文章发布失败")
+            return Promise.reject("文章发布失败");
           }
         }).catch(err => {
           this.$message.error({
