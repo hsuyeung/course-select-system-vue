@@ -194,6 +194,21 @@
         this.$router.replace({name: "Home"});
         this.username = getCookie('username');
       }
+      this.$EventBus.$on("editArticle", (data) => {
+        let pane = {
+          title: "编辑文章",
+          pathName: "EditArticle"
+        }
+        if (!JSON.stringify(this.panes).includes(JSON.stringify(pane))) {
+          this.panes.push(pane);
+          this.activeKey = this.panes.length - 1;
+        } else {
+          this.activeKey = this.panes.findIndex((pane1) => {
+            return pane1.pathName == pane.pathName;
+          });
+        }
+        this.$router.replace({name: pane.pathName, params: data});
+      })
     }
   };
 </script>

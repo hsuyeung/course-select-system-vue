@@ -35,8 +35,8 @@
 <script>
   import EditorMd from "./components/EditorMd";
   import PublishModal from "./components/PublishModal";
-  import {publishArticle, uploadImg} from "../../../network/article";
-  import {getCookie} from "../../../common/cookie";
+  import {publishArticle, uploadImg} from "network/article";
+  import {getCookie} from "common/cookie";
 
   export default {
     name: "Add",

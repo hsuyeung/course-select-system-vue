@@ -114,12 +114,6 @@
         default: () => {
           return []
         }
-      },
-      "roleFilters": {
-        type: Array,
-        default: () => {
-          return []
-        }
       }
     },
     data() {
@@ -134,7 +128,7 @@
     computed: {
       //获取表头
       getColumns() {
-        let {filteredInfo, roleFilters} = this;
+        let {filteredInfo} = this;
         filteredInfo = filteredInfo || {};
         const columns = [
           {
@@ -233,9 +227,6 @@
             width: "400px",
             align: 'center',
             scopedSlots: {customRender: 'tags'},
-            filters: roleFilters,
-            filteredValue: filteredInfo.roles || null,
-            onFilter: (value, record) => JSON.stringify(record).indexOf(value) > 0
           },
           {
             title: '创建者',

@@ -6,7 +6,6 @@
 
     <article-table
       :data="data"
-      :roleFilters="roleFilters"
       @actionClick="openEditPanel"
       :current-page="currentPage"
       :total-page="total"
@@ -28,16 +27,12 @@
     components: { ArticleTable},
     data() {
       return {
-        data: [],//管理员数据
+        data: [],//数据
         total: 0,//数据总数
         loading: false,//是否加载
         currentPage: 1,//当前页
         pageSize: 10,//每页数据条数
-        editPanelVisible: false,//编辑面板是否可见
-        roleFilters: [],//权限过滤列表
-        currentData: {},//当前操作的管理员数据（添加或修改）
-        roles: [],//所有角色信息
-        addPanelVisible: false,//添加管理员的弹窗是否可见
+        currentData: {},//当前操作的数据（添加或修改）
         isSuperAdmin:false,//是否是超级管理员
       };
     },
@@ -51,30 +46,6 @@
       this.getData();
     },
     methods: {
-      //保存成功
-      saveSuccess() {
-        this.getData();
-        this.editPanelVisible = false;
-      },
-      //添加管理员成功
-      addSuccess() {
-        this.getData();
-        this.addPanelVisible = false;
-      },
-      // 取消修改
-      cancelEdit() {
-        this.editPanelVisible = false;
-      },
-      //打开添加管理员的弹窗
-      openAddPanel() {
-        // 设置添加弹窗可见
-        this.addPanelVisible = true
-      },
-      //取消添加
-      cancelAdd() {
-        // 设置弹窗不可见
-        this.addPanelVisible = false;
-      },
       // 表格发生变化
       handleTableChange(currentPage) {
         this.currentPage = currentPage;
@@ -82,13 +53,8 @@
       },
       //打开编辑弹窗
       openEditPanel(index) {
-        this.currentData = JSON.parse(JSON.stringify(this.data[index]));
-        this.currentData.loginPass = '';
-        this.editPanelVisible = true;
-      },
-      // 取消编辑管理员信息
-      editCancel() {
-        this.editPanelVisible = false;
+        this.currentData = this.data[index]
+        this.$EventBus.$emit("editArticle",this.currentData)
       },
 
       // 获取分页数据

@@ -1,8 +1,8 @@
 <template>
   <a-modal
     :visible="visible"
-    title="完善信息"
-    okText="确认发布"
+    title="文章信息"
+    okText="确认保存"
     @ok="publish"
     @cancel="cancel"
   >
@@ -172,11 +172,9 @@
     },
     data() {
       return {
-        items: ['jack', 'lucy'],
         delCoverBtnVisible: false,
         cover: null,
         imageUrl: "",//封面图的url
-        uploading: false,
         descMaxLength: 200,//文章描述的最大长度
         labelCol: {span: 4},//标题的长度占比
         wrapperCol: {span: 20},//内容的长度占比
