@@ -209,6 +209,9 @@
         }
         this.$router.replace({name: pane.pathName, params: data});
       })
+      this.$EventBus.$on("editArticleSuccess",()=>{
+        this.remove(this.activeKey);
+      })
     }
   };
 </script>
