@@ -63,16 +63,37 @@ export function uploadImg(formData) {
 
 
 /**
+ * 批量删除文件
+ * @param fileNames
+ * @returns {AxiosPromise}
+ */
+export function deleteFile(fileNames) {
+  return request({
+    url: BASE_URL.COMMON.FILE + METHOD_URL.BATCH_DELETE,
+    method: 'delete',
+    headers: {
+      "token": getCookie('token'),//传入token
+    },
+    params: {
+      fileNames
+    }
+  })
+}
+
+
+
+
+/**
  * 发布文章
  * @param article
  * @returns {AxiosPromise}
  */
 export function publishArticle(article) {
   return request({
-    url:BASE_URL.ADMIN.ARTICLE+METHOD_URL.ADD,
+    url: BASE_URL.ADMIN.ARTICLE + METHOD_URL.ADD,
     method: "post",
-    headers:{
-      "token":getCookie('token'),
+    headers: {
+      "token": getCookie('token'),
     },
     data: article
 
@@ -96,5 +117,21 @@ export function getArticlePage(currentPage, pageSize) {
       pageIndex: currentPage,//页码
       pageSize: pageSize,//每页的数据条数
     }
+  })
+}
+
+/**
+ *更新文章
+ * @param article
+ * @returns {AxiosPromise}
+ */
+export function updateArticle(article) {
+  return request({
+    url: BASE_URL.ADMIN.ARTICLE + METHOD_URL.UPDATE,
+    method: "post",
+    headers: {
+      "token": getCookie('token'),
+    },
+    data: article
   })
 }

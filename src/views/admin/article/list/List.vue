@@ -40,6 +40,9 @@
       //获取当前用户的角色
       let roles = getCookie('role');
       this.isSuperAdmin = roles.includes('SUPER_ADMIN')
+      this.$EventBus.$on("editArticleSuccess",()=>{
+        this.getData();
+      })
     },
     mounted() {
       // 第一次加载获取数据

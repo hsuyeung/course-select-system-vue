@@ -35,7 +35,7 @@
 <script>
   import EditorMd from "./components/EditorMd";
   import PublishModal from "./components/PublishModal";
-  import {publishArticle, uploadImg} from "network/article";
+  import {updateArticle, uploadImg, deleteFile} from "network/article";
   import {getCookie} from "common/cookie";
 
   export default {
@@ -46,6 +46,7 @@
     },
     data() {
       return {
+        data: {},
         title: "",//标题
         md: "",//md内容
         html: "",//html内容
@@ -64,9 +65,10 @@
     },
     activated() {
       if (Object.getOwnPropertyNames(this.$route.params).length !== 0) {
-        const {title, description, author, category, status, mdContent, cover, tags, htmlContent} = this.$route.params;
+        const {id, title, description, author, category, status, mdContent, cover, tags, htmlContent} = this.$route.params;
         this.setArticleData(title, description, author, category, status, mdContent, cover, tags);
         this.$refs.publish._data.imageUrl = cover;
+        this.data = this.$route.params;
         //匹配img标签
         let imgReg = /<img.*?(?:>|\/>)/gi;
         //匹配src属性
@@ -75,9 +77,12 @@
         let imgArr = htmlContent.match(imgReg);
 
         //循环匹配src值，并存起来
-        this.oldImgFile = imgArr.map(item => {
-          return item.match(srcReg)[1];
-        })
+        if (imgArr != null) {
+          this.oldImgFile = imgArr.map(item => {
+            return item.match(srcReg)[1];
+          })
+        }
+
       }
     },
     methods: {
@@ -92,38 +97,64 @@
         this.publishPanelVisible = false;
       },
       articlePublish(description, cover, category, tagList, author, status) {
-        return;
+
         if (this.title === "") {
           this.$message.warning({
             content: "请输入标题"
           });
           return;
         }
-        let article = {};
+        let article = JSON.parse(JSON.stringify(this.data));
 
         this.$message.loading({
-          content: "正在发布文章",
+          content: "正在保存文章",
           duration: 0
         });
 
         new Promise((resolve, reject) => {
-          if (cover != null) {
-            // 1、上传封面图获取图片链接
-            let coverFormData = new FormData();
-            coverFormData.append('file', cover);
-            uploadImg(coverFormData).then(res => {
-              if (res.code && res.code === 20003) {
-                article["cover"] = res.data;
-                resolve();
-              } else {
-                reject(res.msg);
-              }
-            }).catch(err => {
-              reject(err);
-            })
-          } else {
+          if (cover!=null){
+            // 现在cover有值
+            if (typeof cover==='string'){
+              //是string，说明以前肯定有值
+              article["cover"] = cover;
+              resolve();
+            }else {
+              //是文件对象
+              let coverFormData = new FormData();
+              coverFormData.append('file', cover);
+              uploadImg(coverFormData).then(res => {
+                if (res.code && res.code === 20003) {
+                  article["cover"] = res.data;
+                  if (this.data.cover && this.data.cover != null){
+                    //以前有值
+                    let delCover = this.data.cover.split('/');
+                    delCover = delCover[delCover.length - 1].split(':')[0];
+                    deleteFile(delCover)
+                  }
+                  resolve();
+                } else {
+                  reject(res.msg);
+                }
+              }).catch(err => {
+                reject(err);
+              })
+            }
+          }else {
+            // cover没有值
+            if (this.data.cover && this.data.cover != null){
+              //以前有值
+              let delCover = this.data.cover.split('/');
+              delCover = delCover[delCover.length - 1].split(':')[0];
+              deleteFile(delCover)
+            }
+            article["cover"] = null;
             resolve();
           }
+
+
+
+
+
         }).then(res => {
           // 2、循环上传文章的图片文件，判断文章中是否存在这个标记，存在的才上传
           //2.1定义图片上传的Promise的数组
@@ -151,6 +182,23 @@
             this.$refs.editor.$refs.md.$img2Url(key, res[index].data)
           });
 
+          // 1、获取新的图片列表
+          //匹配img标签
+          let imgReg = /<img.*?(?:>|\/>)/gi;
+          //匹配src属性
+          let srcReg = /src=[\'\"]?([^\'\"]*)[\'\"]?/i;
+
+
+          let imgArr = [];
+          imgArr = this.html.match(imgReg);
+
+          if (imgArr != null) {
+            imgArr.map(item => {
+              this.newImgFile.push(item.match(srcReg)[1]);
+            })
+          }
+
+
           // 4、组装文章对象，将标题、描述、封面图、分类、标签、内容组装为一个对象
           const {title, md, html} = this;
           article["title"] = title;
@@ -162,36 +210,52 @@
           article["tags"] = tagList;
           article["status"] = status;
           // 5、发布文章
-          return publishArticle(article)
+          return updateArticle(article)
         }).then(res => {
           this.$message.destroy();
           if (res.code && res.code === 20000) {
             this.publishPanelVisible = false;
 
             this.$message.success({
-              content: "发布成功"
+              content: "保存成功"
             });
-
-            this.$refs.editor._data.content = "";//清空内容
-            this.title = "";//清空标题
-            this.$refs.publish._data.form = {//清空发布弹窗组件中的描述、作者、分类等信息
-              description: '',
-              author: "",
-              category: null,
-              status: 2
-            }
-            this.$refs.publish._data.cover = null;//清空标题图
-            this.$refs.publish._data.selectedTags = [];//清空已选标签
+            this.setArticleData();
+            this.$EventBus.$emit("editArticleSuccess");
+            return Promise.resolve();
           } else {
             return Promise.reject("文章发布失败");
           }
+        }).then(res => {
+
+          // 2、循环遍历旧的图片列表，判断是否在新的列表中
+          let delImgArr = [];
+          this.oldImgFile.map(imgUrl => {
+            if (this.newImgFile.indexOf(imgUrl) < 0) {
+              // 3、不存在的就包装成Promise数组删除
+              imgUrl = imgUrl.split('/');
+              imgUrl = imgUrl[imgUrl.length - 1].split(':')[0];
+              delImgArr.push(imgUrl);
+            }
+          });
+
+          delImgArr = delImgArr.join(',')
+
+          if (delImgArr.length !== 0) {
+            deleteFile(delImgArr).then(res => {
+              return Promise.resolve();
+            }).catch(err => {
+              return Promise.reject(err)
+            })
+          }
         }).catch(err => {
+          this.$message.destroy();
           this.$message.error({
-            content: err
+            content: "保存失败"
           })
         })
       },
-      setArticleData(title, description, author, category = null, status = 2, content, cover = null, tags = []) {
+      // 设置文章数据
+      setArticleData(title = "", description = "", author = "", category = null, status = 2, content = "", cover = null, tags = []) {
         this.$refs.editor._data.content = content;//内容
         this.title = title;//标题
         this.$refs.publish._data.form = {//发布弹窗组件中的描述、作者、分类等信息

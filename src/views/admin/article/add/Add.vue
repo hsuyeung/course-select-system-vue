@@ -165,8 +165,9 @@
             return Promise.reject("文章发布失败");
           }
         }).catch(err => {
+          this.$message.destroy();
           this.$message.error({
-            content: err
+            content: "发布失败"
           })
         })
       }

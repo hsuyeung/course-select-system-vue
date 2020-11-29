@@ -30,7 +30,8 @@ export const METHOD_URL = {
   LOGOUT: "/logout",
   GET_ALL:"/get/all",
   SEND:"/send",
-  ADD_IMG:"/add/img"
+  ADD_IMG:"/add/img",
+  BATCH_DELETE:"/delete/batchDelete"
 };
 
 
