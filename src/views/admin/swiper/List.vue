@@ -1,14 +1,15 @@
 <template>
   <div>
     <div style="margin-bottom: 10px">
-      <a-button type="primary" @click="openAddPanel">添加标签</a-button>
+      <a-button type="primary" @click="openAddPanel">添加轮播</a-button>
       <a-button type="primary" style="margin-left: 10px" @click="()=>this.getData()">刷新数据</a-button>
     </div>
 
-    <tag-table
+    <swiper-table
       :data="data"
       :roleFilters="roleFilters"
       @actionClick="openEditPanel"
+      @deleteClick="deleteClick"
       :current-page="currentPage"
       :total-page="total"
       @change="handleTableChange"
@@ -16,7 +17,7 @@
     />
 
     <!--    编辑管理员的组件-->
-    <edit-tag
+    <edit-swiper
       :visible="editPanelVisible"
       @cancel="cancelEdit"
       :roles="roles"
@@ -24,7 +25,7 @@
       @success="saveSuccess"
     />
     <!--    添加管理员的组件-->
-    <add-tag
+    <add-swiper
       :visible="addPanelVisible"
       @cancel="cancelAdd"
       :roles="roles"
@@ -35,18 +36,19 @@
 <script>
 
   import responseCode from "network/responseCode";
-  import EditTag from "./components/EditTag";//编辑管理员组件
-  import AddTag from "./components/AddTag";//添加管理员组件
-  import TagTable from "./components/TagTable";
-  import {getTagPage} from "network/tag";
+  import EditSwiper from "./components/EditSwiper";//编辑管理员组件
+  import AddSwiper from "./components/AddSwiper";//添加管理员组件
+  import SwiperTable from "./components/SwiperTable";
+  import {getSwiperPage} from "network/swiper";
+  import {deleteSwiper} from "../../../network/swiper";
   //管理员展示表格组件
 
 
   export default {
     components: {
-      EditTag,
-      TagTable,
-      AddTag
+      EditSwiper,
+      SwiperTable,
+      AddSwiper
     },
     data() {
       return {
@@ -67,6 +69,21 @@
       this.getData();
     },
     methods: {
+      //删除轮播
+      deleteClick(index) {
+        deleteSwiper(this.data[index].id).then(res => {
+          if (res.code === 20000) {
+            this.$message.success({
+              content:"删除成功"
+            })
+            this.getData();
+          } else {
+            responseCode(res.code, this);
+          }
+        }).catch(err => {
+          responseCode(-1, this);
+        })
+      },
       //保存成功
       saveSuccess() {
         this.getData();
@@ -111,7 +128,7 @@
       getData() {
         this.loading = true;
         //调用获取分页数据的方法，传入页码和数据条数
-        getTagPage(this.currentPage, this.pageSize).then(res => {
+        getSwiperPage(this.currentPage, this.pageSize).then(res => {
           //判断code
           if (res.code === 20000) {//获取成功
             //设置数据

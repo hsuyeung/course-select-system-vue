@@ -1,6 +1,4 @@
 import {getCookie} from "./cookie";
-import routerConfig from "config/router";
-import router from "../router";
 import menuConfig from "config/menu"
 
 /**
@@ -48,9 +46,5 @@ export function getMenu() {
   return menuArr;
 }
 
-/**
- * 获取路由
- */
-export function getRouter() {
 
-}
+

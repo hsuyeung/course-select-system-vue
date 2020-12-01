@@ -30,20 +30,19 @@
         <!--状态-->
         <a-radio-group
           class="item"
-          :value="`${data.status}`"
+          :value="data.status"
           button-style="solid"
-          @change="changeStatus"
         >
-          <a-radio-button value="0">
+          <a-radio-button :value="0">
             正常
           </a-radio-button>
-          <a-radio-button value="1">
+          <a-radio-button :value="1">
             删除
           </a-radio-button>
-          <a-radio-button value="2">
+          <a-radio-button :value="2">
             审核中
           </a-radio-button>
-          <a-radio-button value="3">
+          <a-radio-button :value="3">
             审核失败
           </a-radio-button>
         </a-radio-group>
@@ -85,10 +84,6 @@
       }
     },
     methods: {
-      //状态改变
-      changeStatus(event) {
-        this.data.status = parseInt(event.target.value)
-      },
       save() {
         this.$refs.form.validate(valid => {
           if (valid) {

@@ -10,7 +10,8 @@ export const BASE_URL = {
     CATEGORY: "/api/v3/admin/category",
     ADMIN: "/api/v3/admin/admin",
     ROLE: "/api/v3/admin/role",
-    MAIL:"/api/v3/admin/mail"
+    MAIL:"/api/v3/admin/mail",
+    SWIPER:"/api/v3/admin/swiper"
   },
   COMMON: {//公共接口
     MAIN: "/api/v3",
@@ -31,7 +32,8 @@ export const METHOD_URL = {
   GET_ALL:"/get/all",
   SEND:"/send",
   ADD_IMG:"/add/img",
-  BATCH_DELETE:"/delete/batchDelete"
+  BATCH_DELETE:"/delete/batchDelete",
+  DELETE:"/delete"
 };
 
 

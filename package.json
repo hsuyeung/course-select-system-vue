@@ -16,7 +16,8 @@
     "viser-vue": "^2.4.7",
     "@antv/data-set": "^0.11.6",
     "mavon-editor": "^2.9.0",
-    "markdown-it-toc": "^1.1.0"
+    "markdown-it-toc": "^1.1.0",
+    "moment": "^2.29.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

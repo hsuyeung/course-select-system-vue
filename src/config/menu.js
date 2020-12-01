@@ -56,8 +56,8 @@ export default {
     },
     childrenMenu: {
       ADD: {
-        title: "添加轮播",
-        key: "AddSwiper"
+        title: "轮播列表",
+        key: "SwiperList"
       },
       EDIT: {
         title: "轮播列表",
