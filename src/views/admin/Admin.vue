@@ -190,7 +190,7 @@
       if (!checkCookie('token')) {
         this.$router.replace({name: "Login"})
       } else {
-        this.menu.push(...getMenu());//获取菜单
+        this.menu.push(...getMenu()); // 获取菜单
         this.$router.replace({name: "Home"});
         this.username = getCookie('username');
       }

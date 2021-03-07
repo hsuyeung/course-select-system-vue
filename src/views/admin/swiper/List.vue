@@ -76,6 +76,7 @@
             this.$message.success({
               content:"删除成功"
             })
+            //重新获取数据
             this.getData();
           } else {
             responseCode(res.code, this);

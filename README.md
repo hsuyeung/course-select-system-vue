@@ -1,4 +1,4 @@
-# blog-admin
+# course-select-system-antd-vue
 
 ## Project setup
 ```

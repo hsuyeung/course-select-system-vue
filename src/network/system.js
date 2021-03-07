@@ -10,14 +10,14 @@ import {BASE_URL, METHOD_URL} from "config/network";
  */
 export function getAdministratorPage(currentPage, pageSize) {
   return request({
-    url: BASE_URL.ADMIN.ADMIN + METHOD_URL.GET_PAGE,
+    url: "http://localhost:9978/api/v1/system/secure/admin/list/0/10",
     headers: {
       "token": getCookie('token'),//传入token
-    },
-    params: {
-      pageIndex: currentPage,//页码
-      pageSize: pageSize,//每页的数据条数
     }
+    // params: {
+    //   pageIndex: currentPage,//页码
+    //   pageSize: pageSize,//每页的数据条数
+    // }
   })
 }
 
@@ -27,7 +27,7 @@ export function getAdministratorPage(currentPage, pageSize) {
  */
 export function getAllRoles() {
   return request({
-    url: BASE_URL.ADMIN.ROLE + METHOD_URL.GET_ALL,
+    url: "http://localhost:9978/api/v1/system/secure/role/list/",
     headers: {
       "token": getCookie('token'),//传入token
     },
@@ -58,14 +58,15 @@ export function updateAdmin(adminInfo) {
  * @returns {AxiosPromise}
  */
 export function addAdmin(adminInfo) {
+  console.log(adminInfo);
+
   return request({
-    url: BASE_URL.ADMIN.ADMIN + METHOD_URL.ADD,
+    url: 'http://localhost:9978/api/v1/system/secure/admin/add',
     method: "post",
     headers: {
       "token": getCookie('token')
     },
     data: adminInfo
-
   })
 }
 

@@ -25,8 +25,8 @@
 
     <!--    操作模板-->
     <template slot="action" slot-scope="text, record, index">
-      <a-button class="btn" type="primary" @click="actionClick(index)">编辑</a-button>
-      <a-button class="btn" type="danger" @click="deleteClick(index)">删除</a-button>
+      <a-button style="margin: 0 3px" type="primary" @click="actionClick(index)">编辑</a-button>
+      <a-button style="margin: 0 3px" type="danger" @click="deleteClick(index)">删除</a-button>
     </template>
 
 
@@ -207,7 +207,7 @@
       actionClick(index) {
         this.$emit('actionClick', index)
       },
-      deleteClick(index){
+      deleteClick(index) {
         this.$emit('deleteClick', index)
       },
       // 表格发生变化
@@ -240,7 +240,5 @@
     background: #1890FF;
     color: white;
   }
-  .btn{
-    margin: 0 3px;
-  }
+
 </style>

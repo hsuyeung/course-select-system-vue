@@ -1,29 +1,39 @@
-import {request} from "./request";
-import {getCookie} from "common/cookie";
-import {BASE_URL, METHOD_URL} from "config/network";
-
+import { request } from "./request";
+import { getCookie } from "common/cookie";
+import { BASE_URL, METHOD_URL } from "config/network";
 
 /**
  * 登录
+ * @param account 学号/工号/手机号/邮箱/用户名
+ * @param password 密码
+ * @param loginType 登录类型
  * @returns {AxiosPromise}
  */
-export function login(name, password) {
-  return request({
-    url: BASE_URL.ADMIN.MAIN + METHOD_URL.LOGIN,
-    method: "post",
-    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-    transformRequest: [function (data, headers) {
-      let ret = ''
-      for (let it in data) {
-        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-      }
-      return ret
-    }],
-    data: {
-      username: name,
-      loginPass: password
-    }
-  })
+export function login(account, password, loginType) {
+  switch (loginType) {
+    case '0':
+    case '1':
+      return request({
+        url: 'http://localhost:9978/api/v1/client/common/user/login',
+        method: 'post',
+        data: {
+          account: account,
+          password: password,
+          loginType: loginType
+        }
+      });
+    case '2':
+      return request({
+        url: 'http://localhost:9978/api/v1/system/common/admin/login',
+        method: 'post',
+        data: {
+          username: account,
+          password: password
+        }
+      });
+    default:
+      break;
+  }
 }
 
 /**
@@ -32,10 +42,10 @@ export function login(name, password) {
  */
 export function logout() {
   return request({
-    url: BASE_URL.ADMIN.MAIN + METHOD_URL.LOGOUT,
+    url: 'http://localhost:9978/api/v1/system/common/admin/logout',
     method: "post",
     headers: {
-      "token": getCookie('token')
+      token: getCookie("token")
     }
-  })
+  });
 }

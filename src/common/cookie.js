@@ -2,7 +2,7 @@
  * 设置cookie
  * @param key
  * @param value
- * @param time（cookie的有效时间，默认1小时）
+ * @param time（cookie的有效时间，默认2小时）
  */
 export function setCookie(key, value, time = 2) {
   let d = new Date();
