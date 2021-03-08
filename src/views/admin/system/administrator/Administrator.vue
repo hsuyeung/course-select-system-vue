@@ -51,7 +51,7 @@ export default {
       data: [], //管理员数据
       total: 0, //数据总数
       loading: false, //是否加载
-      currentPage: 0, //当前页
+      currentPage: 1, //当前页
       pageSize: 10, //每页数据条数
       editPanelVisible: false, //编辑面板是否可见
       roleFilters: [], //权限过滤列表
@@ -111,7 +111,7 @@ export default {
     getData() {
       this.loading = true;
       //调用获取分页数据的方法，传入页码和数据条数
-      getAdministratorPage(this.currentPage, this.pageSize)
+      getAdministratorPage(this.currentPage - 1, this.pageSize)
         .then((res) => {
           //判断code
           if (res.code === 20000) {

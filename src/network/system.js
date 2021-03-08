@@ -10,14 +10,10 @@ import {BASE_URL, METHOD_URL} from "config/network";
  */
 export function getAdministratorPage(currentPage, pageSize) {
   return request({
-    url: "http://localhost:9978/api/v1/system/secure/admin/list/0/10",
+    url: "http://localhost:9978/api/v1/system/secure/admin/list/" + currentPage + "/" + pageSize,
     headers: {
       "token": getCookie('token'),//传入token
     }
-    // params: {
-    //   pageIndex: currentPage,//页码
-    //   pageSize: pageSize,//每页的数据条数
-    // }
   })
 }
 
@@ -43,7 +39,7 @@ export function getAllRoles() {
  */
 export function updateAdmin(adminInfo) {
   return request({
-    url: BASE_URL.ADMIN.ADMIN + METHOD_URL.UPDATE,
+    url: 'http://localhost:9978/api/v1/system/secure/admin/update',
     method: 'post',
     headers: {
       "token": getCookie('token')

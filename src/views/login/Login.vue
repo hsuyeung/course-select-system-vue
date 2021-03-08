@@ -128,8 +128,9 @@ export default {
                 setCookie('role', roleArr);
                 // 保存管理员用户名
                 setCookie('username', res.info.username);
+              } else {
+                setCookie('username', res.info.account);
               }
-              setCookie('username', res.info.account);
               // 保存账号类型，用于之后做判断
               setCookie('loginType', this.loginType);
               this.$message.success({

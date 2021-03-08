@@ -21,19 +21,28 @@
       <a-form-model-item label="用户名" prop="username">
         <a-input v-model="data.username" />
       </a-form-model-item>
+      <!-- 真实姓名 -->
+      <a-form-model-item label="真实姓名" prop="realName">
+        <a-input v-model="data.realName" />
+      </a-form-model-item>
+      <!-- 身份证 -->
+      <a-form-model-item label="身份证" prop="idCardNo">
+        <a-input v-model="data.idCardNo" />
+      </a-form-model-item>
+      <!-- 手机号 -->
+      <a-form-model-item label="手机号" prop="phoneNumber">
+        <a-input v-model="data.phoneNumber" />
+      </a-form-model-item>
       <!--输入邮箱-->
       <a-form-model-item label="邮箱" prop="email">
         <a-input v-model="data.email" />
       </a-form-model-item>
-      <!--输入密码-->
-      <a-form-model-item label="密码" prop="loginPass">
-        <a-input-password
-          placeholder="不修改密码请不要输入任何内容"
-          v-model="data.loginPass"
-        />
+      <!-- 密码 -->
+      <a-form-model-item label="密码" prop="password">
+        <a-input v-model="data.password" type="password"/>
       </a-form-model-item>
-      <!--角色权限选择-->
-      <a-form-model-item label="权限角色" prop="roles">
+      <!--角色选择-->
+      <a-form-model-item label="管理员角色" prop="roles">
         <a-tree-select
           style="width: 100%"
           :value="roleSelectedItems"
@@ -47,21 +56,19 @@
           <a-tree-select-node
             v-for="item in roles"
             v-show="!roleSelectedItems.includes(item.id)"
-            :key="item.id + item.roleNameCN"
+            :key="item.id + item.roleName"
             :value="item.id"
             :title="item.roleName"
           >
           </a-tree-select-node>
         </a-tree-select>
       </a-form-model-item>
-
       <!--管理员状态-->
-      <a-form-model-item label="状态" prop="status">
+      <a-form-model-item label="状态" prop="accountStatus">
         <!--状态-->
-        <a-radio-group button-style="solid" v-model="data.status">
+        <a-radio-group button-style="solid" v-model="data.accountStatus">
           <a-radio-button :value="0"> 正常 </a-radio-button>
-          <a-radio-button :value="1"> 冻结 </a-radio-button>
-          <a-radio-button :value="2"> 删除 </a-radio-button>
+          <a-radio-button :value="1"> 锁定 </a-radio-button>
         </a-radio-group>
       </a-form-model-item>
     </a-form-model>
@@ -105,11 +112,15 @@ export default {
         //输入内容的校验规则
         username: [
           { required: true, message: "请输入用户名", trigger: "blur" },
-          {
-            pattern: /^[A-Za-z][A-Za-z0-9-_]{5,17}$/,
-            message: "用户名格式不正确",
-            trigger: "blur",
-          },
+        ],
+        realName: [
+          { required: true, message: "请输入真实姓名", trigger: "blur" },
+        ],
+        idCardNo: [
+          { required: true, message: "请输入身份证", trigger: "blur" },
+        ],
+        phoneNumber: [
+          { required: true, message: "请输入手机号", trigger: "blur" }
         ],
         email: [
           { required: true, message: "请输入邮箱", trigger: "blur" },
@@ -119,14 +130,7 @@ export default {
             trigger: "blur",
           },
         ],
-        loginPass: [
-          {
-            pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z!@#$%^&*()+=_-]{6,18}$/,
-            message: "密码格式不正确",
-            trigger: "blur",
-          },
-        ],
-        status: [{ required: true, message: "请选择状态", trigger: "blur" }],
+        accountStatus: [{ required: true, message: "请选择状态", trigger: "blur" }],
       },
     };
   },
@@ -156,6 +160,7 @@ export default {
           //调用更新管理员信息的请求函数
           updateAdmin(this.data)
             .then((res) => {
+              console.log(res)
               if (res.code === 20000) {
                 //判断状态码
                 this.$message.success({
