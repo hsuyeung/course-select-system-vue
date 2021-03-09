@@ -4,7 +4,7 @@
     <a-layout-sider v-model="collapsed" collapsible
                     :style="{ overflow: 'auto', height: '100vh' }">
       <!--      logo-->
-      <div class="logo"/>
+      <div class="logo">高校选课系统</div>
       <!--      菜单-->
       <a-menu theme="dark" :default-selected-keys="['1']" :selectedKeys="[panes[activeKey].pathName]" mode="inline"
               @select="handleMenuItemClick">
@@ -41,9 +41,9 @@
           </a-menu-item>
         </a-menu> -->
 
-        <!--        顶部右侧的用户名及菜单-->
+        <!-- 顶部右侧的用户名及菜单 -->
         <a-dropdown style="float: right">
-          <a class="ant-dropdown-link" style="font-size: 20px;color:#025BF2;">
+          <a class="ant-dropdown-link" style="font-size: 20px;color:#36cbcb;">
             {{username}}
             <a-icon type="down"/>
           </a>
@@ -252,8 +252,9 @@
   }
 
   .logo {
+    font-size: 20px;
+    color: #5cb1ff;
     height: 32px;
-    background: rgba(255, 255, 255, 0.2);
     margin: 16px;
   }
 </style>

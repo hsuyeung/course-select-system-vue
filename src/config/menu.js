@@ -130,10 +130,14 @@ export default {
         title: '角色管理',
         key: 'Role'
       },
-      EMAIL:{
-        title:"邮件系统",
-        key:"Email"
-      }
+      AUTHORITY: {
+        title: '权限管理',
+        key: 'Authority'
+      },
+      // EMAIL:{
+      //   title:"邮件系统",
+      //   key:"Email"
+      // }
     }
   }
 

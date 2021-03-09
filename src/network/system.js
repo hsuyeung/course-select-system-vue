@@ -128,6 +128,52 @@ export function addRole(role) {
 }
 
 /**
+ * 分页获取权限列表
+ */
+export function getAuthoritiesPage(currentPage, pageSize) {
+  return request({
+    url: "http://localhost:9978/api/v1/system/secure/authority/list/" + currentPage + "/" + pageSize,
+    headers: {
+      "token": getCookie('token')
+    }
+  })
+}
+
+/**
+ * 添加权限
+ * @param authority 权限信息
+ */
+ export function addAuthority(authority) {
+  console.log(authority);
+  return request({
+    url: 'http://localhost:9978/api/v1/system/secure/authority/add',
+    method: 'post',
+    headers: {
+      'token': getCookie('token')
+    },
+    data: authority
+  });
+}
+
+
+/**
+ * 更新权限信息
+ * @param authority 权限信息
+ * @returns {AxiosPromise}
+ */
+ export function updateAuthority(authority) {
+  return request({
+    url: 'http://localhost:9978/api/v1/system/secure/authority/update',
+    method: 'post',
+    headers: {
+      "token": getCookie('token')
+    },
+    data: authority
+  })
+}
+
+
+/**
  * 发送邮件
  * @param formData
  * @returns {AxiosPromise}
