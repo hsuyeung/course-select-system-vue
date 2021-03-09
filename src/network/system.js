@@ -12,7 +12,7 @@ export function getAdministratorPage(currentPage, pageSize) {
   return request({
     url: "http://localhost:9978/api/v1/system/secure/admin/list/" + currentPage + "/" + pageSize,
     headers: {
-      "token": getCookie('token'),//传入token
+      "token": getCookie('token')
     }
   })
 }
@@ -23,9 +23,9 @@ export function getAdministratorPage(currentPage, pageSize) {
  */
 export function getAllRoles() {
   return request({
-    url: "http://localhost:9978/api/v1/system/secure/role/list/",
+    url: "http://localhost:9978/api/v1/system/secure/role/list",
     headers: {
-      "token": getCookie('token'),//传入token
+      "token": getCookie('token')
     },
   })
 }
@@ -63,6 +63,67 @@ export function addAdmin(adminInfo) {
       "token": getCookie('token')
     },
     data: adminInfo
+  })
+}
+
+/**
+ * 分页获取角色信息
+ * @param currentPage
+ * @param pageSize
+ * @returns {AxiosPromise}
+ */
+ export function getRolesPage(currentPage, pageSize) {
+  return request({
+    url: "http://localhost:9978/api/v1/system/secure/role/list/" + currentPage + "/" + pageSize,
+    headers: {
+      "token": getCookie('token')
+    }
+  })
+}
+
+/**
+ * 添加角色
+ * @param role 角色信息
+ */
+export function addRole(role) {
+  console.log(role);
+  return request({
+    url: 'http://localhost:9978/api/v1/system/secure/role/add',
+    method: 'post',
+    headers: {
+      'token': getCookie('token')
+    },
+    data: role
+  });
+}
+
+
+/**
+ * 更新角色信息
+ * @param role 角色信息
+ * @returns {AxiosPromise}
+ */
+ export function updateRole(role) {
+  return request({
+    url: 'http://localhost:9978/api/v1/system/secure/role/update',
+    method: 'post',
+    headers: {
+      "token": getCookie('token')
+    },
+    data: role
+  })
+}
+
+/**
+ * 获取所有的权限信息
+ * @returns {AxiosPromise}
+ */
+ export function getAllAuthority() {
+  return request({
+    url: "http://localhost:9978/api/v1/system/secure/authority/list",
+    headers: {
+      "token": getCookie('token')
+    },
   })
 }
 

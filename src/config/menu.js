@@ -126,6 +126,10 @@ export default {
         title:"管理员管理",
         key:"Administrator"
       },
+      ROLE: {
+        title: '角色管理',
+        key: 'Role'
+      },
       EMAIL:{
         title:"邮件系统",
         key:"Email"

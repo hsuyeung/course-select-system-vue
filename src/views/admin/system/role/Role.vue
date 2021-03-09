@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="margin-bottom: 10px">
-      <a-button type="primary" @click="openAddPanel">添加管理员</a-button>
+      <a-button type="primary" @click="openAddPanel">添加角色</a-button>
       <a-button
         type="primary"
         style="margin-left: 10px"
@@ -10,9 +10,9 @@
       >
     </div>
 
-    <admin-table
+    <role-table
       :data="data"
-      :roleFilters="roleFilters"
+      :authorityFilters="authorityFilters"
       @actionClick="openEditPanel"
       :current-page="currentPage"
       :total-page="total"
@@ -20,51 +20,52 @@
       :loading="loading"
     />
 
-    <!--    编辑管理员的组件-->
-    <edit-admin
+    <!--    编辑角色的组件-->
+    <edit-role
       :visible="editPanelVisible"
       @cancel="cancelEdit"
-      :roles="roles"
+      :authorities="authorities"
       :data="currentData"
       @success="saveSuccess"
     />
-    <!--    添加管理员的组件-->
-    <add-admin
+    <!--    添加角色的组件-->
+    <add-role
       :visible="addPanelVisible"
       @cancel="cancelAdd"
-      :roles="roles"
+      :authorities="authorities"
       @success="addSuccess"
     />
   </div>
 </template>
 <script>
-import { getAdministratorPage, getAllRoles } from "network/system"; //获取API数据和网络请求相关
+import { getRolesPage, getAllAuthority } from "network/system";
+// import { getAdministratorPage, getAllRoles } from "network/system"; //获取API数据和网络请求相关
 import responseCode from "network/responseCode";
-import EditAdmin from "./components/EditAdmin"; //编辑管理员组件
-import AddAdmin from "./components/AddAdmin"; //添加管理员组件
-import AdminTable from "./components/AdminTable"; //管理员展示表格组件
+import EditRole from "./components/EditRole";
+import AddRole from "./components/AddRole";
+import RoleTable from "./components/RoleTable";
 
 export default {
-  components: { AdminTable, AddAdmin, EditAdmin },
+  components: { RoleTable, AddRole, EditRole },
   data() {
     return {
-      data: [], //管理员数据
-      total: 0, //数据总数
-      loading: false, //是否加载
-      currentPage: 1, //当前页
-      pageSize: 10, //每页数据条数
-      editPanelVisible: false, //编辑面板是否可见
-      roleFilters: [], //权限过滤列表
-      currentData: {}, //当前操作的管理员数据（添加或修改）
-      roles: [], //所有角色信息
-      addPanelVisible: false, //添加管理员的弹窗是否可见
+      data: [], // 角色数据
+      total: 0, // 数据总数
+      loading: false, // 是否加载
+      currentPage: 1, // 当前页
+      pageSize: 10, // 每页数据条数
+      editPanelVisible: false, // 编辑面板是否可见
+      authorityFilters: [], // 权限过滤列表
+      currentData: {}, // 当前操作的角色数据（添加或修改）
+      authorities: [], // 所有权限信息
+      addPanelVisible: false, // 添加管理员的弹窗是否可见
     };
   },
   mounted() {
     // 第一次加载获取数据
     this.getData();
     //获取所有权限数据
-    this.getRoles();
+    this.getAuthorities();
   },
   methods: {
     //保存成功
@@ -72,7 +73,7 @@ export default {
       this.getData();
       this.editPanelVisible = false;
     },
-    //添加管理员成功
+    //添加角色成功
     addSuccess() {
       this.getData();
       this.addPanelVisible = false;
@@ -81,7 +82,7 @@ export default {
     cancelEdit() {
       this.editPanelVisible = false;
     },
-    //打开添加管理员的弹窗
+    //打开添加角色的弹窗
     openAddPanel() {
       // 设置添加弹窗可见
       this.addPanelVisible = true;
@@ -101,7 +102,7 @@ export default {
       this.currentData = JSON.parse(JSON.stringify(this.data[index]));
       this.editPanelVisible = true;
     },
-    // 取消编辑管理员信息
+    // 取消编辑角色信息
     editCancel() {
       this.editPanelVisible = false;
     },
@@ -109,13 +110,13 @@ export default {
     // 获取分页数据
     getData() {
       this.loading = true;
-      //调用获取分页数据的方法，传入页码和数据条数
-      getAdministratorPage(this.currentPage - 1, this.pageSize)
+      // 调用获取分页数据的方法，传入页码和数据条数
+      getRolesPage(this.currentPage - 1, this.pageSize)
         .then((res) => {
-          //判断code
+          // 判断code
           if (res.code === 20000) {
-            //获取成功
-            //设置数据
+            // 获取成功
+            // 设置数据
             this.data = res.data.content;
             // 设置分页的数据总条数
             this.total = res.data.totalElements;
@@ -129,16 +130,16 @@ export default {
           this.loading = false;
         });
     },
-    //获取所有的角色信息
-    getRoles() {
-      getAllRoles()
+    // 获取所有的权限信息
+    getAuthorities() {
+      getAllAuthority()
         .then((res) => {
           if (res.code === 20000) {
-            this.roles = res.data;
+            this.authorities = res.data;
             res.data.forEach((value) => {
-              this.roleFilters.push({
-                text: value.roleName,
-                value: value.roleName,
+              this.authorityFilters.push({
+                text: value.name,
+                value: value.name,
               });
             });
           } else {

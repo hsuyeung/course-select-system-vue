@@ -24,7 +24,7 @@
 
       <!--      顶部开始-->
       <a-layout-header style="">
-        <a-menu
+        <!-- <a-menu
           theme="dark"
           mode="horizontal"
           :default-selected-keys="['2']"
@@ -39,7 +39,7 @@
           <a-menu-item key="3">
             nav 3
           </a-menu-item>
-        </a-menu>
+        </a-menu> -->
 
         <!--        顶部右侧的用户名及菜单-->
         <a-dropdown style="float: right">

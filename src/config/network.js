@@ -39,6 +39,5 @@ export const METHOD_URL = {
 
 
 export default {
-  TIMEOUT: 10000,//请求超时时间
+  TIMEOUT: 30 * 1000,//请求超时时间
 }
-

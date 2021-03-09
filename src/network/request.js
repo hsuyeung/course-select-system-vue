@@ -5,7 +5,7 @@ import network_config,{API_URL} from "config/network";
 export function request(config) {
   //1.创建axios实例
   const instance = axios.create({
-    baseURL: API_URL,
+    // baseURL: API_URL,
     timeout: network_config.TIMEOUT,
   })
 
