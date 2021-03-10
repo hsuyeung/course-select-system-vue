@@ -4,7 +4,7 @@ import {checkCookie} from "../common/cookie";
 
 //导入子路由
 import systemRouter from "./system";//系统相关
-import userRouter from "./user";//用户相关
+import schoolRouter from "./school";//学校
 import articleRouter from "./article";//文章相关
 import categoryRouter from "./category";//分类
 import tagRouter from './tag'//标签
@@ -34,7 +34,7 @@ const routes = [
       },
       ...articleRouter
       ,
-      ...userRouter
+      ...schoolRouter
       ,
       ...systemRouter
       ,

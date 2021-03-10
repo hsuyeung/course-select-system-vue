@@ -1,6 +1,5 @@
 import {request} from "./request";
 import {getCookie} from "common/cookie";
-import {BASE_URL, METHOD_URL} from "config/network";
 
 /**
  * 分页获取管理员信息
@@ -169,23 +168,5 @@ export function getAuthoritiesPage(currentPage, pageSize) {
       "token": getCookie('token')
     },
     data: authority
-  })
-}
-
-
-/**
- * 发送邮件
- * @param formData
- * @returns {AxiosPromise}
- */
-export function sendEmail(formData) {
-  return request({
-    url: BASE_URL.ADMIN.MAIL + METHOD_URL.SEND,
-    method: "post",
-    headers: {
-      'Content-Type': 'multipart/form-data',
-      'token': getCookie('token')
-    },
-    data: formData
   })
 }

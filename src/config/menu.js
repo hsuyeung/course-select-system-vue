@@ -1,25 +1,16 @@
 export default {
   // TODO：到时候直接在这里配置三种菜单，根据不同的登录展示不同的菜单即可
-  USER: {//用户菜单
+  SCHOOL: {
     main: {
-      title: "用户管理",//折叠菜单标题
-      key: "User",
-      icon: "user",//折叠菜单标题图标
+      title: "学校管理",
+      key: "School",
+      icon: "home",
       childrenMenu: []
     },
     childrenMenu: {
-
-      ADD: {
-        title: "用户列表",
-        key: "UserList"
-      },
-      EDIT: {
-        title: "用户列表",
-        key: "UserList"
-      },
-      DELETE: {
-        title: "用户列表",
-        key: "UserList"
+      LIST: {
+        title: "学校列表",
+        key: "SchoolList"
       }
     }
 
@@ -133,11 +124,7 @@ export default {
       AUTHORITY: {
         title: '权限管理',
         key: 'Authority'
-      },
-      // EMAIL:{
-      //   title:"邮件系统",
-      //   key:"Email"
-      // }
+      }
     }
   }
 
