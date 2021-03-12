@@ -10,6 +10,7 @@ import categoryRouter from "./category";//分类
 import tagRouter from './tag';//标签
 import swiperRouter from './swiper';//轮播
 import academyRouter from './academy'; // 学院相关
+import majorRouter from './major';  // 专业相关
 
 Vue.use(VueRouter);
 
@@ -38,6 +39,8 @@ const routes = [
       ...schoolRouter
       ,
       ...academyRouter
+      ,
+      ...majorRouter
       ,
       ...systemRouter
       ,

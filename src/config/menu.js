@@ -28,6 +28,20 @@ export default {
       }
     }
   },
+  MAJOR: {
+    main: {
+      title: '专业管理',
+      key: 'major',
+      icon: 'tag',
+      childrenMenu: []
+    },
+    childrenMenu: {
+      LIST: {
+        title: '专业列表',
+        key: 'MajorList'
+      }
+    }
+  },
   ARTICLE: {//文章菜单
     main: {
       title: '文章管理',
