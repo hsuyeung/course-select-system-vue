@@ -26,7 +26,7 @@
         <a-textarea type="textarea" v-model="data.academyDescription" />
       </a-form-model-item>
       <!--学校选择-->
-      <a-form-model-item label="所属学校" prop="schools">
+      <a-form-model-item label="所属学校" prop="school">
         <a-tree-select
           style="width: 100%"
           :value="schoolSelected"
@@ -90,7 +90,7 @@ export default {
         academyName: [
           { required: true, message: "请输入学院名", trigger: "blur" },
         ],
-        isDelete: [{ required: true, message: "请选择状态", trigger: "blur" }],
+        isDelete: [{ required: true, message: "请选择状态", trigger: "blur" }]
       },
     };
   },
