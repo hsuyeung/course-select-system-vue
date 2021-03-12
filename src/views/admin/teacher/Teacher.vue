@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="margin-bottom: 10px">
-      <a-button type="primary" @click="openAddPanel">添加学生</a-button>
+      <a-button type="primary" @click="openAddPanel">添加教师</a-button>
       <a-button
         type="primary"
         style="margin-left: 10px"
@@ -10,9 +10,9 @@
       >
     </div>
 
-    <student-table
+    <teacher-table
       :data="data"
-      :majorFilters="majorFilters"
+      :academyFilters="academyFilters"
       @actionClick="openEditPanel"
       :current-page="currentPage"
       :total-page="total"
@@ -20,51 +20,52 @@
       :loading="loading"
     />
 
-    <!--    编辑学生的组件-->
-    <edit-student
+    <!--    编辑教师的组件-->
+    <edit-teacher
       :visible="editPanelVisible"
       @cancel="cancelEdit"
-      :majors="majors"
+      :academies="academies"
       :data="currentData"
       @success="saveSuccess"
     />
-    <!--    添加学生的组件-->
-    <add-student
+    <!--    添加教师的组件-->
+    <add-teacher
       :visible="addPanelVisible"
       @cancel="cancelAdd"
-      :majors="majors"
+      :academies="academies"
       @success="addSuccess"
     />
   </div>
 </template>
 <script>
-import { getStudentPage, getAllMajors } from "network/student";
+import { getTeacherPage, getAllAcademies } from "network/teacher";
 import responseCode from "network/responseCode";
-import EditStudent from "./components/EditStudent"; //编辑学生组件
-import AddStudent from "./components/AddStudent"; //添加学生组件
-import StudentTable from "./components/StudentTable"; //学生展示表格组件
+import EditTeacher from "./components/EditTeacher"; //编辑教师组件
+import AddTeacher from "./components/AddTeacher"; //添加教师组件
+import TeacherTable from "./components/TeacherTable"; //教师展示表格组件
+import academy from '../../../router/academy';
 
 export default {
-  components: { StudentTable, AddStudent, EditStudent },
+  components: { TeacherTable, AddTeacher, EditTeacher },
   data() {
     return {
-      data: [], //学生数据
+      data: [], //教师数据
       total: 0, //数据总数
       loading: false, //是否加载
       currentPage: 1, //当前页
       pageSize: 10, //每页数据条数
       editPanelVisible: false, //编辑面板是否可见
-      majorFilters: [], //专业过滤列表
-      currentData: {}, //当前操作的学生数据（添加或修改）
-      majors: [], //所有专业信息
-      addPanelVisible: false, //添加学生的弹窗是否可见
+      academyFilters: [], //学院过滤列表
+      currentData: {}, //当前操作的教师数据（添加或修改）
+      academies: [], //所有学院信息
+      addPanelVisible: false, //添加教师的弹窗是否可见
     };
   },
   mounted() {
     // 第一次加载获取数据
     this.getData();
     //获取所有学院数据
-    this.getMajors();
+    this.getAcademies();
   },
   methods: {
     //保存成功
@@ -72,7 +73,7 @@ export default {
       this.getData();
       this.editPanelVisible = false;
     },
-    //添加学生成功
+    //添加教师成功
     addSuccess() {
       this.getData();
       this.addPanelVisible = false;
@@ -81,7 +82,7 @@ export default {
     cancelEdit() {
       this.editPanelVisible = false;
     },
-    //打开添加学生的弹窗
+    //打开添加教师的弹窗
     openAddPanel() {
       // 设置添加弹窗可见
       this.addPanelVisible = true;
@@ -101,7 +102,7 @@ export default {
       this.currentData = JSON.parse(JSON.stringify(this.data[index]));
       this.editPanelVisible = true;
     },
-    // 取消编辑学生信息
+    // 取消编辑教师信息
     editCancel() {
       this.editPanelVisible = false;
     },
@@ -110,7 +111,7 @@ export default {
     getData() {
       this.loading = true;
       //调用获取分页数据的方法，传入页码和数据条数
-      getStudentPage(this.currentPage - 1, this.pageSize)
+      getTeacherPage(this.currentPage - 1, this.pageSize)
         .then((res) => {
           //判断code
           if (res.code === 20000) {
@@ -129,17 +130,17 @@ export default {
           this.loading = false;
         });
     },
-    //获取所有的专业信息
-    getMajors() {
-      getAllMajors()
+    //获取所有的学院信息
+    getAcademies() {
+      getAllAcademies()
         .then((res) => {
           if (res.code === 20000) {
-            res.data.forEach(major => major.majorName += '(' + major.school.schoolName + ')');
-            this.majors = res.data;
+            res.data.forEach(academy => academy.academyName += '(' + academy.school.schoolName + ')');
+            this.academies = res.data;
             res.data.forEach((value) => {
-              this.majorFilters.push({
-                text: value.majorName,
-                value: value.majorName,
+              this.academyFilters.push({
+                text: value.academyName,
+                value: value.academyName,
               });
             });
           } else {

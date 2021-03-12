@@ -12,6 +12,8 @@ import swiperRouter from "./swiper"; //轮播
 import academyRouter from "./academy"; // 学院相关
 import majorRouter from "./major"; // 专业相关
 import studentRouter from "./student"; // 学生相关
+import teacherRouter from "./teacher"; // 教师相关
+import teacher from "./teacher";
 
 Vue.use(VueRouter);
 
@@ -40,6 +42,7 @@ const routes = [
       ...academyRouter,
       ...majorRouter,
       ...studentRouter,
+      ...teacherRouter,
       ...systemRouter,
       ...categoryRouter,
       ...tagRouter,

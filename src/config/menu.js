@@ -56,6 +56,20 @@ export default {
       }
     }
   },
+  TEACHER: {
+    main : {
+      title: '教师管理',
+      key: 'teacher',
+      icon: 'mail',
+      childrenMenu: []
+    },
+    childrenMenu: {
+      LIST: {
+        title: '教师列表',
+        key: 'TeacherList'
+      }
+    }
+  },
   ARTICLE: {//文章菜单
     main: {
       title: '文章管理',
