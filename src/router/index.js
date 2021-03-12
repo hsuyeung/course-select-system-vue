@@ -7,8 +7,9 @@ import systemRouter from "./system";//系统相关
 import schoolRouter from "./school";//学校
 import articleRouter from "./article";//文章相关
 import categoryRouter from "./category";//分类
-import tagRouter from './tag'//标签
-import swiperRouter from './swiper'//轮播
+import tagRouter from './tag';//标签
+import swiperRouter from './swiper';//轮播
+import academyRouter from './academy'; // 学院相关
 
 Vue.use(VueRouter);
 
@@ -35,6 +36,8 @@ const routes = [
       ...articleRouter
       ,
       ...schoolRouter
+      ,
+      ...academyRouter
       ,
       ...systemRouter
       ,
