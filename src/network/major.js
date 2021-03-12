@@ -18,7 +18,7 @@ export function getMajorPage(currentPage, pageSize) {
  * 获取所有的学院数据
  * 因为多个学校可能由多个学院，学院名字可能重名，所以需要在这里将学院名字后面拼上学校名字用于区分
  */
-export function getAllAcademySplicingSchool() {
+export function getAllAcademy() {
   return request({
     url: 'http://localhost:9978/api/v1/client/secure/academy/list',
     headers: {

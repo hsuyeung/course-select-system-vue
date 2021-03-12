@@ -42,6 +42,20 @@ export default {
       }
     }
   },
+  STUDENT: {
+    main: {
+      title: '学生管理',
+      key: 'student',
+      icon: 'book',
+      childrenMenu: []
+    },
+    childrenMenu: {
+      LIST: {
+        title: '学生列表',
+        key: 'StudentList'
+      }
+    }
+  },
   ARTICLE: {//文章菜单
     main: {
       title: '文章管理',

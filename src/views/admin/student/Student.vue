@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="margin-bottom: 10px">
-      <a-button type="primary" @click="openAddPanel">添加专业</a-button>
+      <a-button type="primary" @click="openAddPanel">添加学生</a-button>
       <a-button
         type="primary"
         style="margin-left: 10px"
@@ -10,7 +10,7 @@
       >
     </div>
 
-    <major-table
+    <student-table
       :data="data"
       :majorFilters="majorFilters"
       @actionClick="openEditPanel"
@@ -20,51 +20,51 @@
       :loading="loading"
     />
 
-    <!--    编辑专业的组件-->
-    <edit-major
+    <!--    编辑学生的组件-->
+    <edit-student
       :visible="editPanelVisible"
       @cancel="cancelEdit"
-      :academies="academies"
+      :majors="majors"
       :data="currentData"
       @success="saveSuccess"
     />
-    <!--    添加专业的组件-->
-    <add-major
+    <!--    添加学生的组件-->
+    <add-student
       :visible="addPanelVisible"
       @cancel="cancelAdd"
-      :academies="academies"
+      :majors="majors"
       @success="addSuccess"
     />
   </div>
 </template>
 <script>
-import { getMajorPage, getAllAcademy } from "network/major"; //获取API数据和网络请求相关
+import { getStudentPage, getAllMajors } from "network/student";
 import responseCode from "network/responseCode";
-import EditMajor from "./components/EditMajor"; //编辑专业组件
-import AddMajor from "./components/AddMajor"; //添加专业组件
-import MajorTable from "./components/MajorTable"; //专业展示表格组件
+import EditStudent from "./components/EditStudent"; //编辑学生组件
+import AddStudent from "./components/AddStudent"; //添加学生组件
+import StudentTable from "./components/StudentTable"; //学生展示表格组件
 
 export default {
-  components: { MajorTable, AddMajor, EditMajor },
+  components: { StudentTable, AddStudent, EditStudent },
   data() {
     return {
-      data: [], //专业数据
+      data: [], //学生数据
       total: 0, //数据总数
       loading: false, //是否加载
       currentPage: 1, //当前页
       pageSize: 10, //每页数据条数
       editPanelVisible: false, //编辑面板是否可见
-      majorFilters: [], //学院过滤列表
-      currentData: {}, //当前操作的专业数据（添加或修改）
-      academies: [], //所有学院信息
-      addPanelVisible: false, //添加专业的弹窗是否可见
+      majorFilters: [], //专业过滤列表
+      currentData: {}, //当前操作的学生数据（添加或修改）
+      majors: [], //所有专业信息
+      addPanelVisible: false, //添加学生的弹窗是否可见
     };
   },
   mounted() {
     // 第一次加载获取数据
     this.getData();
     //获取所有学院数据
-    this.getAcademies();
+    this.getMajors();
   },
   methods: {
     //保存成功
@@ -72,7 +72,7 @@ export default {
       this.getData();
       this.editPanelVisible = false;
     },
-    //添加专业成功
+    //添加学生成功
     addSuccess() {
       this.getData();
       this.addPanelVisible = false;
@@ -81,7 +81,7 @@ export default {
     cancelEdit() {
       this.editPanelVisible = false;
     },
-    //打开添加专业的弹窗
+    //打开添加学生的弹窗
     openAddPanel() {
       // 设置添加弹窗可见
       this.addPanelVisible = true;
@@ -101,7 +101,7 @@ export default {
       this.currentData = JSON.parse(JSON.stringify(this.data[index]));
       this.editPanelVisible = true;
     },
-    // 取消编辑专业信息
+    // 取消编辑学生信息
     editCancel() {
       this.editPanelVisible = false;
     },
@@ -110,7 +110,7 @@ export default {
     getData() {
       this.loading = true;
       //调用获取分页数据的方法，传入页码和数据条数
-      getMajorPage(this.currentPage - 1, this.pageSize)
+      getStudentPage(this.currentPage - 1, this.pageSize)
         .then((res) => {
           //判断code
           if (res.code === 20000) {
@@ -129,13 +129,12 @@ export default {
           this.loading = false;
         });
     },
-    //获取所有的学院信息
-    getAcademies() {
-      getAllAcademy()
+    //获取所有的专业信息
+    getMajors() {
+      getAllMajors()
         .then((res) => {
           if (res.code === 20000) {
-            res.data.forEach(academy => academy.academyName += '(' + academy.school.schoolName + ')');
-            this.academies = res.data;
+            this.majors = res.data;
             res.data.forEach((value) => {
               this.majorFilters.push({
                 text: value.majorName,
