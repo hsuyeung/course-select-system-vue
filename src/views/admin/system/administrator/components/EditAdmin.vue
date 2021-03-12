@@ -67,8 +67,8 @@
       <a-form-model-item label="状态" prop="accountStatus">
         <!--状态-->
         <a-radio-group button-style="solid" v-model="data.accountStatus">
-          <a-radio-button :value="0"> 正常 </a-radio-button>
-          <a-radio-button :value="1"> 锁定 </a-radio-button>
+          <a-radio-button value="NORMAL"> 正常 </a-radio-button>
+          <a-radio-button value="LOCKED"> 锁定 </a-radio-button>
         </a-radio-group>
       </a-form-model-item>
     </a-form-model>

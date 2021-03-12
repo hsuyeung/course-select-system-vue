@@ -49,8 +49,8 @@
       <a-form-model-item label="状态" prop="isDelete">
         <!--状态-->
         <a-radio-group button-style="solid" v-model="data.isDelete">
-          <a-radio-button :value="0"> 启用 </a-radio-button>
-          <a-radio-button :value="1"> 禁用 </a-radio-button>
+          <a-radio-button value="UNDELETED"> 启用 </a-radio-button>
+          <a-radio-button value="DELETED"> 禁用 </a-radio-button>
         </a-radio-group>
       </a-form-model-item>
     </a-form-model>
