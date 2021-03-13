@@ -84,6 +84,24 @@ export default {
         }
       }
   },
+  COURSEMANAGE: {
+    main: {
+      title: '课程管理',
+      key: 'CourseManage',
+      icon: 'book',
+      childrenMenu: []
+    },
+    childrenMenu: {
+      COURSE: {
+        title: '课程列表',
+        key: 'Course'
+      },
+      COURSECATEGORY: {
+        title: '课程分类列表',
+        key: 'CourseCategory'
+      }
+    }
+  },
   ARTICLE: {//文章菜单
     main: {
       title: '文章管理',

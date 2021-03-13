@@ -14,6 +14,7 @@ import majorRouter from "./major"; // 专业相关
 import studentRouter from "./student"; // 学生相关
 import teacherRouter from "./teacher"; // 教师相关
 import scoreTypeRouter from './scoreType';  // 学分类型相关
+import courseRouter from './course'; // 课程相关
 
 Vue.use(VueRouter);
 
@@ -44,6 +45,7 @@ const routes = [
       ...studentRouter,
       ...teacherRouter,
       ...scoreTypeRouter,
+      ...courseRouter,
       ...systemRouter,
       ...categoryRouter,
       ...tagRouter,

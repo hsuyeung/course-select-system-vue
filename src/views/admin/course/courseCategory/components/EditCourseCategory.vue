@@ -1,6 +1,6 @@
 <template>
   <a-modal
-    title="编辑权限"
+    title="编辑课程分类"
     :visible="visible"
     okText="保存"
     cancelText="取消"
@@ -17,16 +17,10 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item label="权限名" prop="name">
-        <a-input v-model="data.name" />
+      <a-form-model-item label="课程分类" prop="courseCategoryName">
+        <a-input v-model="data.courseCategoryName" />
       </a-form-model-item>
-      <a-form-model-item label="权限路径" prop="url">
-        <a-input v-model="data.url" />
-      </a-form-model-item>
-      <a-form-model-item label="权限描述" prop="authorityDescription">
-        <a-input v-model="data.authorityDescription" />
-      </a-form-model-item>
-      <!--权限状态-->
+      <!--课程分类状态-->
       <a-form-model-item label="状态" prop="isDelete">
         <!--状态-->
         <a-radio-group button-style="solid" v-model="data.isDelete">
@@ -39,11 +33,11 @@
 </template>
 
 <script>
-import { updateAuthority } from "network/system";
+import { updateCourseCategory } from "network/course";
 import responseCode from "network/responseCode";
 
 export default {
-  name: "EditAuthority",
+  courseCategoryName: "EditCourseCategory",
   props: {
     visible: {
       //编辑弹窗是否可见
@@ -51,7 +45,7 @@ export default {
       default: false,
     },
     data: {
-      //当前编辑的权限数据
+      //当前编辑的课程分类数据
       type: Object,
       default: () => {
         return {};
@@ -64,14 +58,11 @@ export default {
       labelCol: { span: 4 },
       wrapperCol: { span: 20 },
       rules: {
-        name: [
-          { required: true, message: "请输入权限名", trigger: "blur" },
-        ],
-        url: [
-          { required: true, message: '请输入权限路径', trigger: 'blur' }
+        courseCategoryName: [
+          { required: true, message: "请输入课程分类名", trigger: "blur" },
         ],
         isDelete: [
-          { required: true, message: '请选择权限状态', trigger: 'blur' }
+          { required: true, message: '请选择课程分类状态', trigger: 'blur' }
         ]
       }
     };
@@ -84,8 +75,8 @@ export default {
         if (valid) {
           //设置确认按钮为加载状态
           this.confirmLoading = true;
-          //调用更新权限信息的请求函数
-          updateAuthority(this.data)
+          //调用更新课程分类信息的请求函数
+          updateCourseCategory(this.data)
             .then((res) => {
               console.log(res);
               if (res.code === 20000) {
@@ -107,7 +98,7 @@ export default {
         }
       });
     },
-    // 取消编辑权限信息
+    // 取消编辑课程分类信息
     editCancel() {
       //触发取消事件
       this.$emit("cancel");
