@@ -21,13 +21,6 @@
       <a-tag v-else-if="isDelete === 'DELETED'" color="#FFCE44">已删除</a-tag>
     </template>
 
-    <!-- 性别显示的模板 -->
-    <template slot="gender" slot-scope="gender">
-      <span v-if="gender === 'MALE'">男</span>
-      <span v-else-if="gender === 'FEMALE'">女</span>
-    </template>
-
-
     <!--    操作模板-->
     <template slot="action" slot-scope="text, record, index">
       <a-button type="primary" @click="actionClick(index)">编辑</a-button>
@@ -107,7 +100,7 @@
 
 <script>
 export default {
-  name: "StudentTable",
+  name: "ScoreTypeTable",
   props: {
     currentPage: {
       type: Number,
@@ -158,61 +151,10 @@ export default {
           scopedSlots: { customRender: "id" },
         },
         {
-          title: "学号",
-          dataIndex: "account",
+          title: "学分类型名",
           align: "center",
-          sorter: (a, b) => a.account - b.account,
-        },
-        {
-          title: "学生姓名",
-          dataIndex: "realName",
-          align: "center",
-          sorter: (a, b) => a.realName - b.realName,
-        },
-        {
-          title: "手机号",
-          dataIndex: "phoneNumber",
-          align: "center",
-          sorter: (a, b) => a.phoneNumber - b.phoneNumber,
-        },
-        {
-          title: "邮箱地址",
-          dataIndex: "email",
-          align: "center",
-          sorter: (a, b) => a.email - b.email,
-          ellipsis: true
-        },
-        {
-          title: "性别",
-          dataIndex: "gender",
-          align: "center",
-          sorter: (a, b) => a.gender - b.gender,
-          scopedSlots: { customRender: "gender" }
-        },
-        {
-          title: "身份证号",
-          dataIndex: "idCardNo",
-          align: "center",
-          sorter: (a, b) => a.idCardNo - b.idCardNo,
-          ellipsis: true
-        },
-        {
-          title: "入学日期",
-          dataIndex: "enrollmentDate",
-          align: "center",
-        },
-        {
-          title: "班级",
-          dataIndex: "classNo",
-          align: "center",
-          sorter: (a, b) => a.classNo - b.classNo,
-        },
-        {
-          title: "专业",
-          align: "center",
-          width: "120px",
-          dataIndex: "major.majorName",
-          key: "majorName",
+          dataIndex: "scoreTypeName",
+          key: "scoreTypeName",
           ellipsis: true,
           scopedSlots: {
             filterDropdown: "filterDropdown",
@@ -220,7 +162,7 @@ export default {
             customRender: "customRender",
           },
           onFilter: (value, record) =>
-            record.majorName
+            record.scoreTypeName
               .toString()
               .toLowerCase()
               .includes(value.toLowerCase()),
@@ -231,19 +173,18 @@ export default {
               }, 0);
             }
           },
+        },
+        {
+          title: "毕业所需学分",
+          align: "center",
+          dataIndex: "requiredScore",
           ellipsis: true
         },
         {
-          title: "学院",
-          dataIndex: "academy.academyName",
+          title: "所属学校",
           align: "center",
-          ellipsis: true
-        },
-        {
-          title: "学校",
-          dataIndex: "school.schoolName",
-          align: "center",
-          ellipsis: true
+          ellipsis: true,
+          dataIndex: "school.schoolName"
         },
         {
           title: "状态",

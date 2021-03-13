@@ -70,6 +70,20 @@ export default {
       }
     }
   },
+  SCORETYPE: {
+      main: {
+        title: '学分类型管理',
+        key: 'scoreType',
+        icon: 'number',
+        childrenMenu: []
+      },
+      childrenMenu: {
+        LIST: {
+          title: '学分类型',
+          key: 'ScoreTypeList'
+        }
+      }
+  },
   ARTICLE: {//文章菜单
     main: {
       title: '文章管理',

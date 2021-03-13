@@ -40,7 +40,7 @@
     >
       <a-input
         v-ant-ref="(c) => (searchInput = c)"
-        :placeholder="`输入要搜索的 ${column.dataIndex}`"
+        :placeholder="`输入要搜索的关键字`"
         :value="selectedKeys[0]"
         style="width: 188px; margin-bottom: 8px; display: block"
         @change="(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])"
@@ -153,7 +153,6 @@ export default {
         {
           title: "学院名",
           align: "center",
-          width: "120px",
           dataIndex: "academyName",
           key: "academyName",
           ellipsis: true,
@@ -163,7 +162,7 @@ export default {
             customRender: "customRender",
           },
           onFilter: (value, record) =>
-            record.username
+            record.academyName
               .toString()
               .toLowerCase()
               .includes(value.toLowerCase()),

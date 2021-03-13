@@ -13,7 +13,7 @@ import academyRouter from "./academy"; // 学院相关
 import majorRouter from "./major"; // 专业相关
 import studentRouter from "./student"; // 学生相关
 import teacherRouter from "./teacher"; // 教师相关
-import teacher from "./teacher";
+import scoreTypeRouter from './scoreType';  // 学分类型相关
 
 Vue.use(VueRouter);
 
@@ -43,6 +43,7 @@ const routes = [
       ...majorRouter,
       ...studentRouter,
       ...teacherRouter,
+      ...scoreTypeRouter,
       ...systemRouter,
       ...categoryRouter,
       ...tagRouter,
