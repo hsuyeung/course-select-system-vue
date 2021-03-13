@@ -21,11 +21,22 @@
       <a-tag v-else-if="isDelete === 'DELETED'" color="#FFCE44">已删除</a-tag>
     </template>
 
+    <!--    课程分类显示的模板-->
+    <template slot="courseCategories" slot-scope="courseCategories">
+      <a-tag
+        style="margin: 5px"
+        v-for="courseCategory in courseCategories"
+        :key="courseCategory.id"
+        color="blue"
+        >{{ courseCategory.courseCategoryName }}</a-tag
+      >
+    </template>
+
     <!--    操作模板-->
     <template slot="action" slot-scope="text, record, index">
       <a-button type="primary" @click="actionClick(index)">编辑</a-button>
-      <a-button type="primary" @click="courseSelect(index)">选课</a-button>
-      <a-button type="primary" @click="courseUnSelect(index)">退选</a-button>
+      <a-button @click="courseSelect(index)">选课</a-button>
+      <a-button type="danger" @click="courseUnSelect(index)">退选</a-button>
     </template>
 
     <!--      搜索筛选-->
@@ -128,6 +139,12 @@ export default {
         return [];
       },
     },
+    courseCategoryFilters: {
+      type: Array,
+      default: () => {
+        return [];
+      },
+    },
   },
   data() {
     return {
@@ -140,7 +157,7 @@ export default {
   computed: {
     //获取表头
     getColumns() {
-      let { filteredInfo } = this;
+      let { filteredInfo, courseCategoryFilters } = this;
       filteredInfo = filteredInfo || {};
       const columns = [
         {
@@ -157,7 +174,6 @@ export default {
           align: "center",
           dataIndex: "courseName",
           key: "courseName",
-          ellipsis: true,
           scopedSlots: {
             filterDropdown: "filterDropdown",
             filterIcon: "filterIcon",
@@ -180,22 +196,7 @@ export default {
           title: "课程描述",
           align: "center",
           dataIndex: "courseDescription",
-          ellipsis: true,
-        },
-        {
-          title: "开课时间",
-          align: "center",
-          dataIndex: "startDate",
-        },
-        {
-          title: "结课时间",
-          align: "center",
-          dataIndex: "endDate",
-        },
-        {
-          title: "考试时间",
-          align: "center",
-          dataIndex: "examDate",
+          ellipsis: true
         },
         {
           title: "上课教室",
@@ -206,57 +207,45 @@ export default {
           title: "周学时",
           align: "center",
           dataIndex: "weeklySchoolHour",
-        },
-        {
-          title: "总课时",
-          align: "center",
-          dataIndex: "courseTime",
-        },
-        {
-          title: "是否可选",
-          align: "center",
-          dataIndex: "canSelected",
-        },
-        {
-          title: "课程状态",
-          align: "center",
-          dataIndex: "isEnd",
+          width: '80px'
         },
         {
           title: "课程容量",
           align: "center",
           dataIndex: "maxSelectedNum",
+          width: '120px'
         },
         {
           title: "学分",
           align: "center",
           dataIndex: "score",
+          width: '80px'
         },
         {
           title: "学分类型",
           align: "center",
           dataIndex: "scoreType.scoreTypeName",
+          ellipsis: true
         },
         {
           title: "课程分类",
-          align: "center",
-          dataIndex: "courseCategory.courseCategoryName",
+          dataIndex: "courseCategories",
+          scopedSlots: { customRender: "courseCategories" },
+          filters: courseCategoryFilters,
+          filteredValue: filteredInfo.courseCategories || null,
+          onFilter: (value, record) =>
+            JSON.stringify(record).indexOf(value) > 0,
         },
         {
           title: "任课教师",
           align: "center",
-          dataIndex: "teacher.teacherName",
+          dataIndex: "teacher.realName",
         },
         {
           title: "开课学院",
           align: "center",
           dataIndex: "academy.academyName",
-        },
-        {
-          title: "所属学校",
-          align: "center",
-          ellipsis: true,
-          dataIndex: "school.schoolName",
+          ellipsis: true
         },
         {
           title: "状态",
@@ -274,10 +263,9 @@ export default {
         {
           title: "操作",
           align: "center",
+          width: '300px',
           // fixed: 'right',
           scopedSlots: { customRender: "action" },
-          scopedSlots: { customRender: "courseSelect" },
-          scopedSlots: { customRender: "courseUnselect" },
         },
       ];
 
@@ -288,12 +276,6 @@ export default {
     // 操作按钮点击
     actionClick(index) {
       this.$emit("actionClick", index);
-    },
-    courseSelect(index) {
-      this.$emit("courseSelect", index);
-    },
-    courseUnselect(index) {
-      this.$emit("courseUnselect", index);
     },
     // 表格发生变化
     handleTableChange(pagination, filters, sorter) {

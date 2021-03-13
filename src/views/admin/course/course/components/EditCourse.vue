@@ -52,11 +52,17 @@
       </a-form-model-item>
       <!--是否可选-->
       <a-form-model-item label="是否可选" prop="canSelected">
-        <a-input v-model="data.canSelected" />
+        <a-radio-group button-style="solid" v-model="data.canSelected">
+          <a-radio-button :value="true"> 可选 </a-radio-button>
+          <a-radio-button :value="false"> 不可选 </a-radio-button>
+        </a-radio-group>
       </a-form-model-item>
       <!--课程状态-->
       <a-form-model-item label="课程状态" prop="isEnd">
-        <a-input v-model="data.isEnd" />
+        <a-radio-group button-style="solid" v-model="data.isEnd">
+          <a-radio-button :value="true"> 已结课 </a-radio-button>
+          <a-radio-button :value="false"> 未结课 </a-radio-button>
+        </a-radio-group>
       </a-form-model-item>
       <!--课程容量-->
       <a-form-model-item label="课程容量" prop="maxSelectedNum">
@@ -87,20 +93,21 @@
           </a-tree-select-node>
         </a-tree-select>
       </a-form-model-item>
-      <!-- 课程分类 -->
-      <a-form-model-item label="课程分类" prop="courseCategory">
+      <!--课程分类选择-->
+      <a-form-model-item label="课程分类" prop="courseCategories">
         <a-tree-select
           style="width: 100%"
-          :value="courseCategorySelected"
+          :value="courseCategorySelectedItems"
           :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-          placeholder="请选择课程所属的分类"
+          placeholder="请选择课程的分类"
           allow-clear
+          multiple
           tree-default-expand-all
           @change="courseCategorySelectChange"
         >
           <a-tree-select-node
             v-for="item in courseCategories"
-            v-show="courseCategorySelected!==item.id"
+            v-show="!courseCategorySelectedItems.includes(item.id)"
             :key="item.id + item.courseCategoryName"
             :value="item.id"
             :title="item.courseCategoryName"
@@ -122,9 +129,9 @@
           <a-tree-select-node
             v-for="item in teachers"
             v-show="teacherSelected!==item.id"
-            :key="item.id + item.teacherName"
+            :key="item.id + item.realName"
             :value="item.id"
-            :title="item.teacherName"
+            :title="item.realName"
           >
           </a-tree-select-node>
         </a-tree-select>
@@ -154,8 +161,8 @@
       <a-form-model-item label="状态" prop="isDelete">
         <!--状态-->
         <a-radio-group button-style="solid" v-model="data.isDelete">
-          <a-radio-button :value="0"> 正常 </a-radio-button>
-          <a-radio-button :value="1"> 已删除 </a-radio-button>
+          <a-radio-button value="UNDELETED"> 正常 </a-radio-button>
+          <a-radio-button value="DELETED"> 已删除 </a-radio-button>
         </a-radio-group>
       </a-form-model-item>
     </a-form-model>
@@ -214,8 +221,8 @@ export default {
     return {
       academySelected: undefined, //已经选择的学院信息
       scoreTypeSelected: undefined, //已经选择的学分分类信息
-      courseCategorySelected: undefined, //已经选择的课程分类信息
-      teacherSelected: undefined, //已经选择的教师信息
+      courseCategorySelectedItems: [], //已经选择的课程分类信息
+      teacherSelected: [], //已经选择的教师信息
       confirmLoading: false, //确认按钮loading
       labelCol: { span: 4 },
       wrapperCol: { span: 20 },
@@ -232,7 +239,7 @@ export default {
         maxSelectedNum: [{ required: true, message: '请输入课程容量', trigger: 'blur' }],
         score: [{ required: true, message: '请输入课程学分', trigger: 'blur' }],
         scoreType: [{ required: true, message: '请选择学分类型', trigger: 'blur' }],
-        courseCategory: [{ required: true, message: '请选择课程分类', trigger: 'blur' }],
+        courseCategories: [{ required: true, message: '请选择课程分类', trigger: 'blur' }],
         teacher: [{ required: true, message: '请选择任课教师', trigger: 'blur' }],
         academy: [{ required: true, message: '请选择开课学院', trigger: 'blur' }],
         isDelete: [{ required: true, message: "请选择状态", trigger: "blur" }]
@@ -244,7 +251,7 @@ export default {
     data(value) {
       this.academySelected=value.academy.id;
       this.scoreTypeSelected = value.scoreType.id;
-      this.courseCategorySelected = value.courseCategory.id;
+      this.courseCategorySelectedItems.push(value.courseCategory.id);
       this.teacherSelected = value.teacher.id;
     },
   },
@@ -259,7 +266,7 @@ export default {
     },
     //课程分类选择发生变化
     courseCategorySelectChange(value) {
-      this.courseCategorySelected = value;
+      this.courseCategorySelectedItems = value;
     },
     //任课教师选择发生变化
     teacherSelectChange(value) {
@@ -280,12 +287,11 @@ export default {
             this.scoreTypeSelected===item.id
           )[0];
           this.data.scoreType = scoreType;
-          // TODO：支持多选
           // 对课程分类信息整理
-          let courseCategory = this.courseCategories.filter((item) =>
-            this.courseCategorySelected===item.id
+          let courseCategories = this.courseCategories.filter((item) =>
+            this.courseCategorySelectedItems===item.id
           );
-          this.data.courseCategories = courseCategory;
+          this.data.courseCategories = courseCategories;
           // 对任课教师信息整理
           let teacher = this.teachers.filter((item) =>
             this.teacherSelected===item.id

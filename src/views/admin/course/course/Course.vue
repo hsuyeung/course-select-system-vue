@@ -41,6 +41,7 @@
       :academies="academies"
       :teachers='teachers'
       :scoreTypes='scoreTypes'
+      :courseCategories='courseCategories'
       @success="addSuccess"
     />
   </div>
@@ -178,8 +179,8 @@ export default {
             this.teachers = res.data;
             res.data.forEach((value) => {
               this.courseFilters.push({
-                text: value.teacherName,
-                value: value.teacherName,
+                text: value.realName,
+                value: value.realName,
               });
             });
           } else {
