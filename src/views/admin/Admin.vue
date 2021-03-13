@@ -4,7 +4,7 @@
     <a-layout-sider v-model="collapsed" collapsible
                     :style="{ overflow: 'auto', height: '100vh' }">
       <!--      logo-->
-      <div class="logo">高校选课系统</div>
+      <div class="logo"></div>
       <!--      菜单-->
       <a-menu theme="dark" :default-selected-keys="['1']" :selectedKeys="[panes[activeKey].pathName]" mode="inline"
               @select="handleMenuItemClick">

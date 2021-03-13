@@ -40,3 +40,92 @@ export function addCourseCategory(courseCategory) {
     data: courseCategory
   });
 }
+
+/**
+ * 分页获取课程数据
+ */
+export function getCoursePage(currentPage, pageSize) {
+  return request({
+    url: 'http://localhost:9978/api/v1/client/secure/course/list/' + currentPage + '/' + pageSize,
+    headers: {
+      'token': getCookie('token')
+    }
+  });
+}
+
+/**
+ * 获取所有的学院
+ */
+export function getAllAcademy() {
+  return request({
+    url: 'http://localhost:9978/api/v1/client/secure/academy/list',
+    headers: {
+      'token': getCookie('token')
+    }
+  });
+}
+
+/**
+ * 获取所有教师
+ */
+export function getAllTeacher() {
+  return request({
+    url: 'http://localhost:9978/api/v1/client/secure/teacher/list',
+    headers: {
+      'token': getCookie('token')
+    }
+  });
+}
+
+/**
+ * 获取所有学分类型
+ */
+ export function getAllScoreType() {
+  return request({
+    url: 'http://localhost:9978/api/v1/client/secure/scoreType/list',
+    headers: {
+      'token': getCookie('token')
+    }
+  });
+}
+
+/**
+ * 获取所有课程分类
+ */
+ export function getAllCourseCategory() {
+  return request({
+    url: 'http://localhost:9978/api/v1/client/secure/courseCategory/list',
+    headers: {
+      'token': getCookie('token')
+    }
+  });
+}
+
+/**
+ * 新增一门课程
+ */
+export function addCourse(course) {
+  return request({
+    url: 'http://localhost:9978/api/v1/system/secure/course/add',
+    method: 'post',
+    headers: {
+      'token': getCookie('token')
+    },
+    data: course
+  });
+}
+
+/**
+ * 编辑课程信息
+ */
+ export function updateCourse(course) {
+  return request({
+    url: 'http://localhost:9978/api/v1/system/secure/course/update',
+    method: 'post',
+    headers: {
+      'token': getCookie('token')
+    },
+    data: course
+  });
+}
+
