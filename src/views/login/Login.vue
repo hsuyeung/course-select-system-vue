@@ -129,8 +129,10 @@ export default {
                 setCookie('username', res.info.username);
               } else {
                 setCookie('username', res.info.realName);
+                setCookie('account', res.info.account);
               }
               // 保存账号类型，用于之后做判断
+              setCookie('id', res.info.id);
               setCookie('loginType', this.loginType);
               this.$message.success({
                 content: "登录成功",

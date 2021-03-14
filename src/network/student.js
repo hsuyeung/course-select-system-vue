@@ -27,6 +27,19 @@ export function getAllMajors() {
 }
 
 /**
+ * 查询所有的课程列表
+ */
+ export function getAllCourses() {
+  return request({
+    url: 'http://localhost:9978/api/v1/client/secure/course/list',
+    headers: {
+      'token': getCookie('token')
+    }
+  });
+}
+
+
+/**
  * 添加学生
  */
 export function addStudent(student) {
@@ -43,13 +56,13 @@ export function addStudent(student) {
 }
 
 /**
- * 添加学生
+ * 更新学生
  */
  export function updateStudent(student) {
   student.academy = student.major.academy;
   student.school = student.major.school;
   return request({
-    url: 'http://localhost:9978/api/v1/system/secure/student/add',
+    url: 'http://localhost:9978/api/v1/client/secure/student/update',
     method: 'post',
     headers: {
       'token': getCookie('token')

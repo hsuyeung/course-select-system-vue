@@ -44,9 +44,14 @@ export function addTeacher(teacher) {
  * 更新教师信息
  */
  export function updateTeacher(teacher) {
+  let loginType = getCookie('loginType');
+  var url = 'http://localhost:9978/api/v1/system/secure/teacher/update';
+  if (loginType === '1') {
+    url = 'http://localhost:9978/api/v1/client/secure/teacher/update';
+  }
   teacher.school = teacher.academy.school;
   return request({
-    url: 'http://localhost:9978/api/v1/system/secure/teacher/update',
+    url: url,
     method: 'post',
     headers: {
       'token': getCookie('token')

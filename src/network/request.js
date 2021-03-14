@@ -1,5 +1,5 @@
 import axios from "axios";
-import network_config,{API_URL} from "config/network";
+import network_config from "config/network";
 
 
 export function request(config) {

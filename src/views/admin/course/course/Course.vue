@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="margin-bottom: 10px">
-      <a-button v-if="getLoginType() === '2'" type="primary" @click="openAddPanel">添加课程</a-button>
+      <a-button v-if="isAdmin()" type="primary" @click="openAddPanel">添加课程</a-button>
       <a-button
         type="primary"
         style="margin-left: 10px"
@@ -95,8 +95,8 @@ export default {
     this.getCourseCategories();
   },
   methods: {
-    getLoginType() {
-      return getCookie('loginType');
+    isAdmin() {
+      return getCookie('loginType') === '2';
     },
     //保存成功
     saveSuccess() {

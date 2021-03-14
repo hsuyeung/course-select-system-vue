@@ -106,6 +106,7 @@
 </template>
 
 <script>
+import { getCookie } from '../../../../common/cookie';
 export default {
   name: "StudentTable",
   props: {
@@ -147,7 +148,7 @@ export default {
     getColumns() {
       let { filteredInfo } = this;
       filteredInfo = filteredInfo || {};
-      const columns = [
+      let columns = [
         {
           title: "ID",
           dataIndex: "id",
@@ -258,18 +259,25 @@ export default {
           filteredValue: filteredInfo.isDelete || null,
           onFilter: (value, record) => value == record.isDelete,
         },
-        {
+      ];
+      if (this.isStudent() || this.isAdmin()) {
+        columns.push({
           title: "操作",
           align: "center",
           // fixed: 'right',
           scopedSlots: { customRender: "action" },
-        },
-      ];
-
+        });
+      }
       return columns;
     },
   },
   methods: {
+    isStudent() {
+      return getCookie('loginType') === '0';
+    },
+    isAdmin() {
+      return getCookie('loginType') === '2';
+    },
     // 操作按钮点击
     actionClick(index) {
       this.$emit("actionClick", index);

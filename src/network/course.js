@@ -130,3 +130,36 @@ export function addCourse(course) {
   });
 }
 
+/**
+ * 选课
+ */
+export function selectCourse(studentId, courseId) {
+  return request({
+    url: 'http://localhost:9978/api/v1/client/secure/student/select/course',
+    method: 'post',
+    headers: {
+      'token': getCookie('token')
+    },
+    params: {
+      studentId: studentId,
+      courseIdsStr: courseId
+    }
+  });
+}
+
+/**
+ * 退选
+ */
+ export function unselectCourse(studentId, courseId) {
+  return request({
+    url: 'http://localhost:9978/api/v1/client/secure/student/unselect/course',
+    method: 'post',
+    headers: {
+      'token': getCookie('token')
+    },
+    params: {
+      studentId: studentId,
+      courseIdsStr: courseId
+    }
+  });
+}

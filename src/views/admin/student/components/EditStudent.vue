@@ -27,7 +27,7 @@
       </a-form-model-item>
       <!-- 手机号 -->
       <a-form-model-item label="手机号" prop="phoneNumber">
-        <a-input v-model="data.phoneNUmber" />
+        <a-input v-model="data.phoneNumber" />
       </a-form-model-item>
       <!-- 邮箱地址 -->
       <a-form-model-item label="邮箱地址" prop="email">
@@ -73,6 +73,28 @@
           </a-tree-select-node>
         </a-tree-select>
       </a-form-model-item>
+      <!-- 已选课程 -->
+      <a-form-model-item v-if="isAdmin()" label="已选课程" prop="courses">
+        <a-tree-select
+          style="width: 100%"
+          :value="courseSelectedItems"
+          :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+          placeholder="为学生选择/退选课程"
+          allow-clear
+          multiple
+          tree-default-expand-all
+          @change="courseSelectChange"
+        >
+          <a-tree-select-node
+            v-for="item in courses"
+            v-show="!courseSelectedItems.includes(item.id)"
+            :key="item.id + item.courseName"
+            :value="item.id"
+            :title="item.courseName"
+          >
+          </a-tree-select-node>
+        </a-tree-select>
+      </a-form-model-item>
       <!--学生账号状态-->
       <a-form-model-item label="状态" prop="isDelete">
         <!--状态-->
@@ -89,10 +111,18 @@
 import { updateStudent } from "network/student";
 import responseCode from "network/responseCode";
 import moment from "moment";
+import { getCookie } from 'common/cookie';
 
 export default {
   name: "EditStudent",
   props: {
+    courses: {
+      //全部课程数据
+      type: Array,
+      default: () => {
+        return [];
+      },
+    },
     majors: {
       //全部专业数据
       type: Array,
@@ -115,6 +145,7 @@ export default {
   },
   data() {
     return {
+      courseSelectedItems: [], //已经选择的课程信息
       majorSelected: undefined, //已经选择的专业信息
       confirmLoading: false, //确认按钮loading
       labelCol: { span: 4 },
@@ -148,21 +179,35 @@ export default {
   watch: {
     //监听data数据的变化，更新已选择的专业
     data(value) {
+      this.courseSelectedItems = value.courses.map((item) => item.id);
       this.majorSelected = value.major.id;
     },
   },
   methods: {
+    isAdmin() {
+      return getCookie('loginType') === '2';
+    },
+    //课程选择发生变化
+    courseSelectChange(value) {
+      this.courseSelectedItems = value;
+    },
     //专业选择发生变化
     majorSelectChange(value) {
-      console.log(value);
       this.majorSelected = value;
     },
     //保存修改
     saveEdit() {
       this.$refs.ruleForm.validate((valid) => {
-        this.data.enrollmentDate = moment(this.data.enrollmentDate).format("YYYY-MM-DD");
+        this.data.enrollmentDate = moment(this.data.enrollmentDate).format(
+          "YYYY-MM-DD"
+        );
         //校验规则
         if (valid) {
+          // 对课程信息整理
+          let courses = this.courses.filter((item) =>
+            this.courseSelectedItems.includes(item.id)
+          );
+          this.data.courses = courses;
           // 对专业信息整理
           let major = this.majors.filter(
             (item) => this.majorSelected === item.id

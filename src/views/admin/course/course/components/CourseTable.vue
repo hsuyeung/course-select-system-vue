@@ -34,9 +34,13 @@
 
     <!--    操作模板-->
     <template slot="action" slot-scope="text, record, index">
-      <a-button v-if="getLoginType() === '2'" type="primary" @click="actionClick(index)">编辑</a-button>
-      <a-button @click="courseSelect(index)">选课</a-button>
-      <a-button type="danger" @click="courseUnSelect(index)">退选</a-button>
+      <a-button v-if="isAdmin()" type="primary" @click="actionClick(index)"
+        >编辑</a-button
+      >
+      <a-button v-if="isStudent()" @click="courseSelect(record)">选课</a-button>
+      <a-button v-if="isStudent()" type="danger" @click="courseUnSelect(record)"
+        >退选</a-button
+      >
     </template>
 
     <!--      搜索筛选-->
@@ -113,6 +117,8 @@
 
 <script>
 import { getCookie } from "common/cookie";
+import {selectCourse, unselectCourse} from 'network/course';
+import responseCode from "network/responseCode";
 
 export default {
   name: "CourseTable",
@@ -161,7 +167,7 @@ export default {
     getColumns() {
       let { filteredInfo, courseCategoryFilters } = this;
       filteredInfo = filteredInfo || {};
-      const columns = [
+      let columns = [
         {
           title: "ID",
           dataIndex: "id",
@@ -198,7 +204,7 @@ export default {
           title: "课程描述",
           align: "center",
           dataIndex: "courseDescription",
-          ellipsis: true
+          ellipsis: true,
         },
         {
           title: "上课教室",
@@ -209,25 +215,25 @@ export default {
           title: "周学时",
           align: "center",
           dataIndex: "weeklySchoolHour",
-          width: '80px'
+          width: "80px",
         },
         {
           title: "课程容量",
           align: "center",
           dataIndex: "maxSelectedNum",
-          width: '120px'
+          width: "120px",
         },
         {
           title: "学分",
           align: "center",
           dataIndex: "score",
-          width: '80px'
+          width: "80px",
         },
         {
           title: "学分类型",
           align: "center",
           dataIndex: "scoreType.scoreTypeName",
-          ellipsis: true
+          ellipsis: true,
         },
         {
           title: "课程分类",
@@ -247,7 +253,7 @@ export default {
           title: "开课学院",
           align: "center",
           dataIndex: "academy.academyName",
-          ellipsis: true
+          ellipsis: true,
         },
         {
           title: "状态",
@@ -262,25 +268,74 @@ export default {
           filteredValue: filteredInfo.isDelete || null,
           onFilter: (value, record) => value == record.isDelete,
         },
-        {
+      ];
+      if (this.isStudent() || this.isAdmin()) {
+        columns.push({
           title: "操作",
           align: "center",
-          width: '300px',
+          width: "300px",
           // fixed: 'right',
           scopedSlots: { customRender: "action" },
-        },
-      ];
-
+        });
+      }
       return columns;
     },
   },
   methods: {
-    getLoginType() {
-      return getCookie('loginType');
+    isAdmin() {
+      return getCookie("loginType") === "2";
     },
-    // 操作按钮点击
+    isStudent() {
+      return getCookie("loginType") === "0";
+    },
+    // 编辑按钮点击
     actionClick(index) {
       this.$emit("actionClick", index);
+    },
+    // 选课按钮点击
+    courseSelect(record) {
+      this.$confirm({
+        title: "确定选择该课程吗?",
+        onOk() {
+          selectCourse(getCookie("id"), record.id)
+          .then((res) => {
+              if (res.code === 20000) {
+                alert('选课成功！');
+              } else {
+                alert('选课失败！');
+              }
+            })
+            .catch((err) => {
+              alert('选课失败！');
+            });
+        },
+        onCancel() {
+          // doNothing
+        },
+      });
+    },
+    // 退选按钮点击
+    courseUnSelect(record) {
+      this.$confirm({
+        title: "确定取消选择该课程吗?",
+        okType: "danger",
+        onOk() {
+          unselectCourse(getCookie('id'), record.id)
+          .then((res) => {
+              if (res.code === 20000) {
+                alert('退课成功！');
+              } else {
+                alert('退课失败！');
+              }
+            })
+            .catch((err) => {
+              alert('退课失败！');
+            });
+        },
+        onCancel() {
+          // doNothing
+        },
+      });
     },
     // 表格发生变化
     handleTableChange(pagination, filters, sorter) {

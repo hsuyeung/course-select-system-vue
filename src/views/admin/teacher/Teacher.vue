@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="margin-bottom: 10px">
-      <a-button type="primary" @click="openAddPanel">添加教师</a-button>
+      <a-button v-if="isAdmin()" type="primary" @click="openAddPanel">添加教师</a-button>
       <a-button
         type="primary"
         style="margin-left: 10px"
@@ -43,7 +43,7 @@ import responseCode from "network/responseCode";
 import EditTeacher from "./components/EditTeacher"; //编辑教师组件
 import AddTeacher from "./components/AddTeacher"; //添加教师组件
 import TeacherTable from "./components/TeacherTable"; //教师展示表格组件
-import academy from '../../../router/academy';
+import { getCookie } from 'common/cookie';
 
 export default {
   components: { TeacherTable, AddTeacher, EditTeacher },
@@ -68,6 +68,12 @@ export default {
     this.getAcademies();
   },
   methods: {
+    isAdmin() {
+      return getCookie('loginType') === '2';
+    },
+    isTeacher() {
+      return getCookie('loginType') === '1';
+    },
     //保存成功
     saveSuccess() {
       this.getData();
@@ -115,6 +121,10 @@ export default {
         .then((res) => {
           //判断code
           if (res.code === 20000) {
+            // 如果是教师登录，则只显示当前登录的教师数据s
+          if (this.isTeacher()) {
+            res.data.content = res.data.content.filter(teacher => teacher.account === getCookie('account'));
+          }
             //获取成功
             //设置数据
             this.data = res.data.content;

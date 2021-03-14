@@ -5,10 +5,6 @@ import { checkCookie } from "../common/cookie";
 //导入子路由
 import systemRouter from "./system"; //系统相关
 import schoolRouter from "./school"; //学校
-import articleRouter from "./article"; //文章相关
-import categoryRouter from "./category"; //分类
-import tagRouter from "./tag"; //标签
-import swiperRouter from "./swiper"; //轮播
 import academyRouter from "./academy"; // 学院相关
 import majorRouter from "./major"; // 专业相关
 import studentRouter from "./student"; // 学生相关
@@ -38,7 +34,6 @@ const routes = [
         name: "Home",
         component: () => import("views/admin/home/Home")
       },
-      ...articleRouter,
       ...schoolRouter,
       ...academyRouter,
       ...majorRouter,
@@ -46,10 +41,7 @@ const routes = [
       ...teacherRouter,
       ...scoreTypeRouter,
       ...courseRouter,
-      ...systemRouter,
-      ...categoryRouter,
-      ...tagRouter,
-      ...swiperRouter
+      ...systemRouter
     ]
   }
 ];
