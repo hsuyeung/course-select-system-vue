@@ -72,7 +72,6 @@
 <script>
 import { login } from "network/login"; //引入登录请求的方法
 import { setCookie } from "common/cookie";
-import router from "../../router";
 //引入cookie相关的方法
 
 export default {
@@ -129,7 +128,7 @@ export default {
                 // 保存管理员用户名
                 setCookie('username', res.info.username);
               } else {
-                setCookie('username', res.info.account);
+                setCookie('username', res.info.realName);
               }
               // 保存账号类型，用于之后做判断
               setCookie('loginType', this.loginType);

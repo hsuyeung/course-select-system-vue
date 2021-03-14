@@ -34,8 +34,8 @@
         <a-date-picker v-model="data.endDate" />
       </a-form-model-item>
       <!-- 考试时间 -->
-      <a-form-model-item label="开课时间" prop="startDate">
-        <a-date-picker show-time v-model="data.startDate"> </a-date-picker>
+      <a-form-model-item label="考试时间" prop="examDate">
+        <a-date-picker show-time v-model="data.examDate"> </a-date-picker>
       </a-form-model-item>
       <!--上课教室-->
       <a-form-model-item label="教室" prop="classroom">
@@ -157,6 +157,7 @@
 <script>
 import { addCourse } from "network/course";
 import responseCode from "network/responseCode";
+import moment from "moment";
 
 export default {
   name: "AddCourse",
@@ -211,13 +212,13 @@ export default {
           { required: true, message: "请输入课程名", trigger: "blur" },
         ],
         startDate: [
-          { required: true, message: "请选择开课时间", trigger: "blur" },
+          { required: true, message: "请选择开课时间", trigger: "change" },
         ],
         endDate: [
-          { required: true, message: "请选择结课时间", trigger: "blur" },
+          { required: true, message: "请选择结课时间", trigger: "change" },
         ],
         examDate: [
-          { required: true, message: "请选择考试时间", trigger: "blur" },
+          { required: true, message: "请选择考试时间", trigger: "change" },
         ],
         classroom: [
           { required: true, message: "请输入上课教室", trigger: "blur" },
@@ -232,53 +233,21 @@ export default {
           { required: true, message: "请输入课程容量", trigger: "blur" },
         ],
         score: [{ required: true, message: "请输入课程学分", trigger: "blur" }],
-        scoreType: [
-          { required: true, message: "请选择学分类型", trigger: "blur" },
-          { validator: this.validateScoreType },
-        ],
-        courseCategories: [
-          { required: true, message: "请选择课程分类", trigger: "blur" },
-          { validator: this.validateCourseCategories },
-        ],
-        teacher: [
-          { required: true, message: "请选择任课教师", trigger: "blur" },
-          { validator: this.validateTeacher },
-        ],
-        academy: [
-          { required: true, message: "请选择开课学院", trigger: "blur" },
-          { validator: this.validateAcademy },
-        ],
+        // scoreType: [
+        //   { required: true, message: "请选择学分类型", trigger: "blur" },
+        // ],
+        // courseCategories: [
+        //   { required: true, message: "请选择课程分类", trigger: "blur" },
+        // ],
+        // teacher: [
+        //   { required: true, message: "请选择任课教师", trigger: "blur" },
+        // ],
+        // academy: [
+        //   { required: true, message: "请选择开课学院", trigger: "blur" },
+        // ],
         isDelete: [{ required: true, message: "请选择状态", trigger: "blur" }],
       },
     };
-  },
-  validateScoreType(rules, value, callback) {
-    if (value.length <= 0) {
-      callback("请选择学分类型");
-      return;
-    }
-    callback();
-  },
-  validateCourseCategories(rules, value, callback) {
-    if (value.length <= 0) {
-      callback("请选择课程分类");
-      return;
-    }
-    callback();
-  },
-  validateTeacher(rules, value, callback) {
-    if (value.length <= 0) {
-      callback("请选择任课教师");
-      return;
-    }
-    callback();
-  },
-  validateAcademy(rules, value, callback) {
-    if (value.length <= 0) {
-      callback("请选择开课学院");
-      return;
-    }
-    callback();
   },
   methods: {
     //取消添加
@@ -305,13 +274,17 @@ export default {
     //添加课程
     saveAdd() {
       this.$refs.ruleForm.validate((valid) => {
-        this.data.startDate = moment(this.data.startDate).format("YYYY-MM-DD");
-        this.data.endDate = moment(this.data.endDate).format("YYYY-MM-DD");
-        this.data.examDate = moment(this.data.examDate).format(
-          "YYYY-MM-DD HH:mm:ss"
-        );
         //校验规则
         if (valid) {
+          this.data.startDate = moment(this.data.startDate).format(
+            "YYYY-MM-DD"
+          );
+          this.data.endDate = moment(this.data.endDate).format("YYYY-MM-DD");
+          this.data.examDate = moment(this.data.examDate).format(
+            "YYYY-MM-DD HH:mm:ss"
+          );
+          this.data.canSelected = true;
+          this.data.isEnd = moment().isBefore(moment(this.data.endDate));
           // 对学院信息整理
           let academy = this.academies.filter(
             (item) => this.academySelected === item.id
@@ -324,9 +297,10 @@ export default {
           this.data.scoreType = scoreType;
           // 对课程分类信息整理
           let courseCategories = this.courseCategories.filter(
-            (item) => this.courseCategorySelectedItems === item.id
+            (item) => this.courseCategorySelectedItems.includes(item.id)
           );
           this.data.courseCategories = courseCategories;
+
           // 对任课教师信息整理
           let teacher = this.teachers.filter(
             (item) => this.teacherSelected === item.id

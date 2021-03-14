@@ -48,9 +48,6 @@
             <a-icon type="down"/>
           </a>
           <a-menu slot="overlay">
-            <a-menu-item key="">
-              修改密码
-            </a-menu-item>
             <a-menu-item @click="logOut">
               退出登录
             </a-menu-item>

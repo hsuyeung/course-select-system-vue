@@ -105,6 +105,7 @@ export function getAllTeacher() {
  * 新增一门课程
  */
 export function addCourse(course) {
+  console.log(course)
   return request({
     url: 'http://localhost:9978/api/v1/system/secure/course/add',
     method: 'post',

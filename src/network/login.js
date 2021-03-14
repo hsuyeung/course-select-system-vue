@@ -1,6 +1,5 @@
 import { request } from "./request";
 import { getCookie } from "common/cookie";
-import { BASE_URL, METHOD_URL } from "config/network";
 
 /**
  * 登录
@@ -11,21 +10,21 @@ import { BASE_URL, METHOD_URL } from "config/network";
  */
 export function login(account, password, loginType) {
   switch (loginType) {
-    case '0':
-    case '1':
+    case "0":
+    case "1":
       return request({
-        url: 'http://localhost:9978/api/v1/client/common/user/login',
-        method: 'post',
+        url: "http://localhost:9978/api/v1/client/common/user/login",
+        method: "post",
         data: {
           account: account,
           password: password,
           loginType: loginType
         }
       });
-    case '2':
+    case "2":
       return request({
-        url: 'http://localhost:9978/api/v1/system/common/admin/login',
-        method: 'post',
+        url: "http://localhost:9978/api/v1/system/common/admin/login",
+        method: "post",
         data: {
           username: account,
           password: password
@@ -41,8 +40,14 @@ export function login(account, password, loginType) {
  * @returns {AxiosPromise}
  */
 export function logout() {
+  console.log(getCookie("loginType"));
+  var url = "http://localhost:9978/api/v1/system/common/admin/logout";
+  if (getCookie("loginType") !== '2') {
+    url = "http://localhost:9978/api/v1/client/common/user/logout";
+  }
+  console.log(url)
   return request({
-    url: 'http://localhost:9978/api/v1/system/common/admin/logout',
+    url: url,
     method: "post",
     headers: {
       token: getCookie("token")

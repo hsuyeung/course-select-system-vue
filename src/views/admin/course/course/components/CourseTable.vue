@@ -34,7 +34,7 @@
 
     <!--    操作模板-->
     <template slot="action" slot-scope="text, record, index">
-      <a-button type="primary" @click="actionClick(index)">编辑</a-button>
+      <a-button v-if="getLoginType() === '2'" type="primary" @click="actionClick(index)">编辑</a-button>
       <a-button @click="courseSelect(index)">选课</a-button>
       <a-button type="danger" @click="courseUnSelect(index)">退选</a-button>
     </template>
@@ -112,6 +112,8 @@
 </template>
 
 <script>
+import { getCookie } from "common/cookie";
+
 export default {
   name: "CourseTable",
   props: {
@@ -273,6 +275,9 @@ export default {
     },
   },
   methods: {
+    getLoginType() {
+      return getCookie('loginType');
+    },
     // 操作按钮点击
     actionClick(index) {
       this.$emit("actionClick", index);

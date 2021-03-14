@@ -34,8 +34,8 @@
         <a-date-picker v-model="data.endDate" />
       </a-form-model-item>
       <!-- 考试时间 -->
-      <a-form-model-item label="开课时间" prop="startDate">
-        <a-date-picker show-time v-model="data.startDate">
+      <a-form-model-item label="考试时间" prop="examDate">
+        <a-date-picker show-time v-model="data.examDate">
       </a-date-picker>
       </a-form-model-item>
       <!--上课教室-->
@@ -172,6 +172,7 @@
 <script>
 import { updateCourse } from "network/course";
 import responseCode from "network/responseCode";
+import moment from "moment";
 
 export default {
   name: "EditCourse",
@@ -222,7 +223,7 @@ export default {
       academySelected: undefined, //已经选择的学院信息
       scoreTypeSelected: undefined, //已经选择的学分分类信息
       courseCategorySelectedItems: [], //已经选择的课程分类信息
-      teacherSelected: [], //已经选择的教师信息
+      teacherSelected: undefined, //已经选择的教师信息
       confirmLoading: false, //确认按钮loading
       labelCol: { span: 4 },
       wrapperCol: { span: 20 },
@@ -251,7 +252,7 @@ export default {
     data(value) {
       this.academySelected=value.academy.id;
       this.scoreTypeSelected = value.scoreType.id;
-      this.courseCategorySelectedItems.push(value.courseCategory.id);
+      this.courseCategorySelectedItems = value.courseCategories.map((item) => item.id);
       this.teacherSelected = value.teacher.id;
     },
   },
@@ -277,6 +278,13 @@ export default {
       this.$refs.ruleForm.validate((valid) => {
         //校验规则
         if (valid) {
+          this.data.startDate = moment(this.data.startDate).format(
+            "YYYY-MM-DD"
+          );
+          this.data.endDate = moment(this.data.endDate).format("YYYY-MM-DD");
+          this.data.examDate = moment(this.data.examDate).format(
+            "YYYY-MM-DD HH:mm:ss"
+          );
            // 对学院信息整理
           let academy = this.academies.filter((item) =>
             this.academySelected===item.id
@@ -289,7 +297,7 @@ export default {
           this.data.scoreType = scoreType;
           // 对课程分类信息整理
           let courseCategories = this.courseCategories.filter((item) =>
-            this.courseCategorySelectedItems===item.id
+            this.courseCategorySelectedItems.includes(item.id)
           );
           this.data.courseCategories = courseCategories;
           // 对任课教师信息整理
