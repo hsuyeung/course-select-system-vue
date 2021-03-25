@@ -6,7 +6,7 @@ import { getCookie } from "common/cookie";
  */
 export function getMajorPage(currentPage, pageSize) {
   return request({
-    url: 'http://localhost:9978/api/v1/client/secure/major/list/' + currentPage + '/' + pageSize,
+    url: 'http://121.43.168.195:9978/api/v1/client/secure/major/list/' + currentPage + '/' + pageSize,
     headers: {
       'token': getCookie('token')
     }
@@ -20,7 +20,7 @@ export function getMajorPage(currentPage, pageSize) {
  */
 export function getAllAcademy() {
   return request({
-    url: 'http://localhost:9978/api/v1/client/secure/academy/list',
+    url: 'http://121.43.168.195:9978/api/v1/client/secure/academy/list',
     headers: {
       'token': getCookie('token')
     }
@@ -34,7 +34,7 @@ export function getAllAcademy() {
 export function addMajor(major) {
   major.school = major.academy.school;
   return request({
-    url: 'http://localhost:9978/api/v1/system/secure/major/add',
+    url: 'http://121.43.168.195:9978/api/v1/system/secure/major/add',
     method: 'post',
     headers: {
       'token': getCookie('token')
@@ -50,7 +50,7 @@ export function addMajor(major) {
  export function updateMajor(major) {
   major.school = major.academy.school;
   return request({
-    url: 'http://localhost:9978/api/v1/system/secure/major/update',
+    url: 'http://121.43.168.195:9978/api/v1/system/secure/major/update',
     method: 'post',
     headers: {
       'token': getCookie('token')

@@ -6,7 +6,7 @@ import { getCookie } from "common/cookie";
  */
 export function getScoreTypePage(currentPage, pageSize) {
   return request({
-    url: 'http://localhost:9978/api/v1/client/secure/scoreType/list/' + currentPage + '/' + pageSize,
+    url: 'http://121.43.168.195:9978/api/v1/client/secure/scoreType/list/' + currentPage + '/' + pageSize,
     headers: {
       'token': getCookie('token')
     }
@@ -18,7 +18,7 @@ export function getScoreTypePage(currentPage, pageSize) {
  */
  export function getAllSchool() {
   return request({
-    url: 'http://localhost:9978/api/v1/client/secure/school/list',
+    url: 'http://121.43.168.195:9978/api/v1/client/secure/school/list',
     headers: {
       token: getCookie('token')
     }
@@ -30,7 +30,7 @@ export function getScoreTypePage(currentPage, pageSize) {
  */
 export function addScoreType(scoreType) {
   return request({
-    url: 'http://localhost:9978/api/v1/system/secure/scoreType/add',
+    url: 'http://121.43.168.195:9978/api/v1/system/secure/scoreType/add',
     method: 'post',
     headers: {
       'token': getCookie('token')
@@ -44,7 +44,7 @@ export function addScoreType(scoreType) {
  */
  export function updateScoreType(scoreType) {
   return request({
-    url: 'http://localhost:9978/api/v1/system/secure/scoreType/update',
+    url: 'http://121.43.168.195:9978/api/v1/system/secure/scoreType/update',
     method: 'post',
     headers: {
       'token': getCookie('token')

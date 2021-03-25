@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <h2>这里可以加一个文字，然后配一个背景图</h2>
-  </div>
+  <div class="body"></div>
 </template>
 
 <script>
@@ -12,5 +10,10 @@
 </script>
 
 <style scoped>
-
+  .body {
+    width: 100%;
+    height: 100%;
+    background: url(~assets/img/home.png);
+    background-size:100% 100%;
+  }
 </style>

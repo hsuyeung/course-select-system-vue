@@ -6,7 +6,7 @@ import { getCookie } from "common/cookie";
  */
 export function getCourseCategoriesPage(currentPage, pageSize) {
   return request({
-    url: 'http://localhost:9978/api/v1/client/secure/courseCategory/list/' + currentPage + '/' + pageSize,
+    url: 'http://121.43.168.195:9978/api/v1/client/secure/courseCategory/list/' + currentPage + '/' + pageSize,
     headers: {
       'token': getCookie('token')
     }
@@ -18,7 +18,7 @@ export function getCourseCategoriesPage(currentPage, pageSize) {
  */
 export function addCourseCategory(courseCategory) {
   return request({
-    url: 'http://localhost:9978/api/v1/system/secure/courseCategory/add',
+    url: 'http://121.43.168.195:9978/api/v1/system/secure/courseCategory/add',
     method: 'post',
     headers: {
       'token': getCookie('token')
@@ -32,7 +32,7 @@ export function addCourseCategory(courseCategory) {
  */
  export function updateCourseCategory(courseCategory) {
   return request({
-    url: 'http://localhost:9978/api/v1/system/secure/courseCategory/update',
+    url: 'http://121.43.168.195:9978/api/v1/system/secure/courseCategory/update',
     method: 'post',
     headers: {
       'token': getCookie('token')
@@ -46,7 +46,7 @@ export function addCourseCategory(courseCategory) {
  */
 export function getCoursePage(currentPage, pageSize) {
   return request({
-    url: 'http://localhost:9978/api/v1/client/secure/course/list/' + currentPage + '/' + pageSize,
+    url: 'http://121.43.168.195:9978/api/v1/client/secure/course/list/' + currentPage + '/' + pageSize,
     headers: {
       'token': getCookie('token')
     }
@@ -58,7 +58,7 @@ export function getCoursePage(currentPage, pageSize) {
  */
 export function getAllAcademy() {
   return request({
-    url: 'http://localhost:9978/api/v1/client/secure/academy/list',
+    url: 'http://121.43.168.195:9978/api/v1/client/secure/academy/list',
     headers: {
       'token': getCookie('token')
     }
@@ -70,7 +70,7 @@ export function getAllAcademy() {
  */
 export function getAllTeacher() {
   return request({
-    url: 'http://localhost:9978/api/v1/client/secure/teacher/list',
+    url: 'http://121.43.168.195:9978/api/v1/client/secure/teacher/list',
     headers: {
       'token': getCookie('token')
     }
@@ -82,7 +82,7 @@ export function getAllTeacher() {
  */
  export function getAllScoreType() {
   return request({
-    url: 'http://localhost:9978/api/v1/client/secure/scoreType/list',
+    url: 'http://121.43.168.195:9978/api/v1/client/secure/scoreType/list',
     headers: {
       'token': getCookie('token')
     }
@@ -94,7 +94,7 @@ export function getAllTeacher() {
  */
  export function getAllCourseCategory() {
   return request({
-    url: 'http://localhost:9978/api/v1/client/secure/courseCategory/list',
+    url: 'http://121.43.168.195:9978/api/v1/client/secure/courseCategory/list',
     headers: {
       'token': getCookie('token')
     }
@@ -107,7 +107,7 @@ export function getAllTeacher() {
 export function addCourse(course) {
   console.log(course)
   return request({
-    url: 'http://localhost:9978/api/v1/system/secure/course/add',
+    url: 'http://121.43.168.195:9978/api/v1/system/secure/course/add',
     method: 'post',
     headers: {
       'token': getCookie('token')
@@ -121,7 +121,7 @@ export function addCourse(course) {
  */
  export function updateCourse(course) {
   return request({
-    url: 'http://localhost:9978/api/v1/system/secure/course/update',
+    url: 'http://121.43.168.195:9978/api/v1/system/secure/course/update',
     method: 'post',
     headers: {
       'token': getCookie('token')
@@ -135,7 +135,7 @@ export function addCourse(course) {
  */
 export function selectCourse(studentId, courseId) {
   return request({
-    url: 'http://localhost:9978/api/v1/client/secure/student/select/course',
+    url: 'http://121.43.168.195:9978/api/v1/client/secure/student/select/course',
     method: 'post',
     headers: {
       'token': getCookie('token')
@@ -152,7 +152,7 @@ export function selectCourse(studentId, courseId) {
  */
  export function unselectCourse(studentId, courseId) {
   return request({
-    url: 'http://localhost:9978/api/v1/client/secure/student/unselect/course',
+    url: 'http://121.43.168.195:9978/api/v1/client/secure/student/unselect/course',
     method: 'post',
     headers: {
       'token': getCookie('token')

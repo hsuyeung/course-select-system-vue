@@ -13,7 +13,7 @@ export function login(account, password, loginType) {
     case "0":
     case "1":
       return request({
-        url: "http://localhost:9978/api/v1/client/common/user/login",
+        url: "http://121.43.168.195:9978/api/v1/client/common/user/login",
         method: "post",
         data: {
           account: account,
@@ -23,7 +23,7 @@ export function login(account, password, loginType) {
       });
     case "2":
       return request({
-        url: "http://localhost:9978/api/v1/system/common/admin/login",
+        url: "http://121.43.168.195:9978/api/v1/system/common/admin/login",
         method: "post",
         data: {
           username: account,
@@ -41,9 +41,9 @@ export function login(account, password, loginType) {
  */
 export function logout() {
   console.log(getCookie("loginType"));
-  var url = "http://localhost:9978/api/v1/system/common/admin/logout";
+  var url = "http://121.43.168.195:9978/api/v1/system/common/admin/logout";
   if (getCookie("loginType") !== '2') {
-    url = "http://localhost:9978/api/v1/client/common/user/logout";
+    url = "http://121.43.168.195:9978/api/v1/client/common/user/logout";
   }
   console.log(url)
   return request({

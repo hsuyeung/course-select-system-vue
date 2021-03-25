@@ -8,7 +8,7 @@ import { getCookie } from "common/cookie";
  */
 export function getAcademyPage(currentPage, pageSize) {
   return request({
-    url: 'http://localhost:9978/api/v1/client/secure/academy/list/' + currentPage + '/' + pageSize,
+    url: 'http://121.43.168.195:9978/api/v1/client/secure/academy/list/' + currentPage + '/' + pageSize,
     headers: {
       'token': getCookie('token')
     }
@@ -20,7 +20,7 @@ export function getAcademyPage(currentPage, pageSize) {
  */
 export function getAllSchool() {
   return request({
-    url: 'http://localhost:9978/api/v1/client/secure/school/list',
+    url: 'http://121.43.168.195:9978/api/v1/client/secure/school/list',
     headers: {
       token: getCookie('token')
     }
@@ -32,7 +32,7 @@ export function getAllSchool() {
  */
 export function addAcademy(academy) {
   return request({
-    url: 'http://localhost:9978/api/v1/system/secure/academy/add',
+    url: 'http://121.43.168.195:9978/api/v1/system/secure/academy/add',
     method: 'post',
     headers: {
       'token': getCookie('token')
@@ -47,7 +47,7 @@ export function addAcademy(academy) {
  */
 export function updateAcademy(academy) {
   return request({
-    url: 'http://localhost:9978/api/v1/system/secure/academy/update',
+    url: 'http://121.43.168.195:9978/api/v1/system/secure/academy/update',
     method: 'post',
     headers: {
       'token': getCookie('token')

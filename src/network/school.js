@@ -10,7 +10,7 @@ import { getCookie } from "common/cookie";
 export function getSchoolsPage(currentPage, pageSize) {
   return request({
     url:
-      "http://localhost:9978/api/v1/client/secure/school/list/" +
+      "http://121.43.168.195:9978/api/v1/client/secure/school/list/" +
       currentPage +
       "/" +
       pageSize,
@@ -26,7 +26,7 @@ export function getSchoolsPage(currentPage, pageSize) {
  */
 export function addSchool(school) {
   return request({
-    url: "http://localhost:9978/api/v1/system/secure/school/add",
+    url: "http://121.43.168.195:9978/api/v1/system/secure/school/add",
     method: 'post',
     headers: {
       token: getCookie("token")
@@ -41,7 +41,7 @@ export function addSchool(school) {
  */
 export function updateSchool(school) {
   return request({
-    url: 'http://localhost:9978/api/v1/system/secure/school/update',
+    url: 'http://121.43.168.195:9978/api/v1/system/secure/school/update',
     method: 'post',
     headers: {
       'token': getCookie('token')
